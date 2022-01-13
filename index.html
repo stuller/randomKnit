@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Random Knit</title>
+        <link rel="stylesheet" href="styles.css"/>
+        <script src="randomKnit.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.0/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    </head>
+    <body>
+        <h1>Random Knit</h1>
+        <div id="config">
+            <div id="configErrors" class="error"></div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title"/>
+
+            <label for="rows">Rows:</label>
+            <input type="number" id="rows" name="rows" value="6" min="2" max="20"/>
+
+            <label for="stitches">Stitches:</label>
+            <input type="number" id="stitches" name="stitches" value="6" min="2" max="20"/>
+
+            <label for="enableTile">Tile:</label>
+            <input type="checkbox" id="enableTile" name="enableTile" checked/>
+
+            <label for="mc">Main Color:</label>
+            <input type="color" id="mc" name="mc" value="#ffffff"/>
+
+            <label for="cc">Contrast Color:</label>
+            <input type="color" id="cc" name="cc" value="#555555"/>
+
+            <button id="create">Create Chart</button>
+            <button id="download">Download Chart</button>
+        </div>
+        <hr/>
+        <div id="container">
+            <h1 id="headerTitle" contentEditable="true">Random Knit 🖉</h1>
+            <div id="tileContainer">
+                <div id="tile"></div>
+            </div>
+            <div id="chart"></div>
+        </div>
+    </body>
+</html>
