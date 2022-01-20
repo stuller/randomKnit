@@ -66,3 +66,16 @@ button {
     grid-column-start: 1;
     grid-column-end: 3;
 }
+
+.tile.mirrorH .row {
+    flex-direction: row-reverse;
+}
+
+.tile {
+    display: flex;
+    flex-direction: column;
+}
+
+.tile.mirrorV {
+ flex-direction: column-reverse;   
+}

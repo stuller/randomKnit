@@ -7,6 +7,20 @@ window.addEventListener('load', () => {
     document.getElementById('title').addEventListener('change', (e) => {
         document.getElementById('headerTitle').innerText = e.target.value;
     });
+
+    document.getElementById('mirrorH').addEventListener('change', (e) => {
+        const tile = document.getElementById('tile');
+        const chart = document.getElementById('chart');
+        chart.innerHTML = '';
+        addTilesToChart(tile, true, e.target.checked)
+    });
+    document.getElementById('mirrorV').addEventListener('change', (e) => {
+        const tile = document.getElementById('tile');
+        const chart = document.getElementById('chart');
+        const mirrorH = document.getElementById('mirrorH').checked;
+        chart.innerHTML = '';
+        addTilesToChart(tile, true, mirrorH, e.target.checked)
+    });
 })
 
 
@@ -15,6 +29,8 @@ const handleCreate = () => {
     const rows = +document.getElementById('rows').value;
     const stitches = +document.getElementById('stitches').value;
     const enableTile = document.getElementById('enableTile').checked;
+    const mirrorH = document.getElementById('mirrorH').checked;
+    const mirrorV = document.getElementById('mirrorV').checked;
     const mc = document.getElementById('mc').value;
     const cc = document.getElementById('cc').value;
     
@@ -22,8 +38,9 @@ const handleCreate = () => {
     clearDiv('chart');
     validateConfig(rows, stitches, 'configErrors');
     const tile = createTile(rows, stitches, mc, cc, 'random');
-    addTilesToChart(tile, enableTile);
-    randomizeChart(rows, stitches, tile, mc, cc)
+    addTilesToChart(tile, enableTile, mirrorH, mirrorV);
+    randomizeChart(rows, stitches, tile, mc, cc);
+
 }
 
 
@@ -96,13 +113,22 @@ const createStitchLabels = (numberOfStitches) => {
     }
 }
 
-const addTilesToChart = (tile, enableTile) => {
-    console.log(enableTile)
+const addTilesToChart = (tile, enableTile, mirrorH, mirrorV) => {
     const numberOfTiles = enableTile ? 16 : 1;
+    const tilesToMirrorV = [4,5,6,7,12,13,14,15]; //todo find better way to do this
     const chart = document.getElementById('chart');
     for(let i = 0; i < numberOfTiles; i++) {
         const newTile = tile.cloneNode('deep');
         newTile.id = `tile-${i}`;
+        newTile.className = 'tile';
+        newTile.setAttribute('data-tileNumber', i);
+        if(mirrorH && i % 2) {
+            newTile.classList.add('mirrorH')
+        }
+        if(mirrorV && tilesToMirrorV.includes(i)) {
+            newTile.classList.add('mirrorV')
+        }
+
         chart.appendChild(newTile);
     }
 }
