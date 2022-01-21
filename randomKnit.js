@@ -1,4 +1,4 @@
-
+let chartCount = 0;
 
 window.addEventListener('load', () => {
 
@@ -6,6 +6,7 @@ window.addEventListener('load', () => {
     document.getElementById('download').addEventListener('click', convertHTMLToPDF)
     document.getElementById('title').addEventListener('change', (e) => {
         document.getElementById('headerTitle').innerText = e.target.value;
+        chartCount = 0;
     });
     
 
@@ -29,6 +30,7 @@ const updatePreview = () => {
 }
 
 const handleCreate = () => {
+    chartCount++;
     const rows = +document.getElementById('rows').value;
     const stitches = +document.getElementById('stitches').value;
     const enableTile = document.getElementById('enableTile').checked;
@@ -36,7 +38,7 @@ const handleCreate = () => {
     const mirrorV = document.getElementById('mirrorV').checked;
     const mc = document.getElementById('mc').value;
     const cc = document.getElementById('cc').value;
-    document.getElementById('headerTitle').innerText = document.getElementById('title').value;
+    document.getElementById('headerTitle').innerText = `${document.getElementById('title').value}-${chartCount}`
     clearDiv('tile');
     clearDiv('preview');
     validateConfig(rows, stitches, 'configErrors');
@@ -94,6 +96,7 @@ const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
     chart.appendChild(tile0);
     const chartStitches = mirrorH && enableTile ? stitches * 2 : stitches;
     const chartRows = mirrorV && enableTile ? rows * 2 : rows;
+    const mirrorRow = Math.floor(50/stitches) % 2 ? Math.floor(50/stitches) + 1 : Math.floor(50/stitches);
 
     if(enableTile) {
         if(mirrorH) {
@@ -103,12 +106,12 @@ const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
             chart.appendChild(tile1);
         }
         if(mirrorV) {
-            const tile2 = document.getElementById('tile-4').cloneNode('deep');
+            const tile2 = document.getElementById(`tile-${mirrorRow}`).cloneNode('deep');
             tile2.id = 'chart-tile-2';
             chart.appendChild(tile2);
         }
         if(mirrorV && mirrorH) {
-            const tile3 = document.getElementById('tile-5').cloneNode('deep');
+            const tile3 = document.getElementById(`tile-${mirrorRow + 1}`).cloneNode('deep');
             tile3.id = 'chart-tile-3';
             chart.appendChild(tile3);
         }
@@ -149,14 +152,17 @@ const createStitchLabels = (numberOfStitches) => {
 }
 
 const addTilesToPreview = (tile, enableTile, mirrorH, mirrorV) => {
-    const numberOfTiles = enableTile ? 16 : 1;
+    const stitches = document.getElementById('stitches').value;
+    const stitchRepeats = Math.floor(50/stitches) % 2 ? Math.floor(50/stitches) + 1 : Math.floor(50/stitches);
+    console.log(stitches)
+    const numberOfTiles = enableTile ? stitchRepeats * stitchRepeats : 1;
     const preview = document.getElementById('preview');
     for(let i = 0; i < numberOfTiles; i++) {
         const newTile = tile.cloneNode('deep');
         newTile.id = `tile-${i}`;
         newTile.className = 'tile';
         newTile.setAttribute('data-tileNumber', i);
-        const rowNumber = Math.floor(i/4);
+        const rowNumber = Math.floor(i/stitchRepeats);
         newTile.setAttribute('data-rowNumber', rowNumber);
         if(mirrorH && i % 2) {
             newTile.classList.add('mirrorH')
@@ -171,6 +177,7 @@ const addTilesToPreview = (tile, enableTile, mirrorH, mirrorV) => {
         })
         preview.appendChild(newTile);
     }
+    preview.style.gridTemplateColumns = `repeat(${stitchRepeats}, 1fr)`
 }
 
 const saveAsPDF = () => {
