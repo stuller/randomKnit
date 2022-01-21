@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Random Knit</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styles.css"/>
         <script src="randomKnit.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.0/html2canvas.min.js"></script>
@@ -11,32 +12,49 @@
         <h1>Random Knit</h1>
         <div id="config">
             <div id="configErrors" class="error"></div>
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title" value="Untitled"/>
 
-            <label for="rows">Rows:</label>
-            <input type="number" id="rows" name="rows" value="6" min="2" max="20"/>
+            <fieldset>
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" value="Untitled"/>
+            </fieldset>
 
-            <label for="stitches">Stitches:</label>
-            <input type="number" id="stitches" name="stitches" value="6" min="2" max="20"/>
+            <fieldset>
+                <label for="rows">Rows:</label>
+                <input type="number" id="rows" name="rows" value="6" min="2" max="20"/>
 
-            <label for="enableTile">Tile:</label>
-            <input type="checkbox" id="enableTile" name="enableTile" checked/>
+                <label for="stitches">Stitches:</label>
+                <input type="number" id="stitches" name="stitches" value="6" min="2" max="20"/>
+            </fieldset>
 
-            <label for="mirrorH">Mirror Horizontal:</label>
-            <input type="checkbox" id="mirrorH" name="mirrorH" checked/>
+            <fieldset>
+                <label for="enableTile">Tile:</label>
+                <input type="checkbox" id="enableTile" name="enableTile" checked/>
+            </fieldset>
 
-            <label for="mirrorV">Mirror Vertical:</label>
-            <input type="checkbox" id="mirrorV" name="mirrorV" checked/>
+            <fieldset>
+                <label for="mirrorH">Mirror Horizontal:</label>
+                <input type="checkbox" id="mirrorH" name="mirrorH" checked/>
+            </fieldset>
 
-            <label for="mc">Main Color:</label>
-            <input type="color" id="mc" name="mc" value="#ffffff"/>
+            <fieldset>
+                <label for="mirrorV">Mirror Vertical:</label>
+                <input type="checkbox" id="mirrorV" name="mirrorV" checked/>
+            </fieldset>
 
-            <label for="cc">Contrast Color:</label>
-            <input type="color" id="cc" name="cc" value="#c67676"/>
+            <fieldset>
+                <label for="mc">Main Color:</label>
+                <input type="color" id="mc" name="mc" value="#ffffff"/>
+            </fieldset>
 
-            <button id="create">Create Chart</button>
-            <button id="download">Download Chart</button>
+            <fieldset>
+                <label for="cc">Contrast Color:</label>
+                <input type="color" id="cc" name="cc" value="#c67676"/>
+            </fieldset>
+
+            <fieldset>
+                <button id="create">Create Chart</button>
+                <button id="download">Download Chart</button>
+            </fieldset>
         </div>
         <hr/>
         <div id="container">
