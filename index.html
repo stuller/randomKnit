@@ -12,7 +12,7 @@
         <div id="config">
             <div id="configErrors" class="error"></div>
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title"/>
+            <input type="text" id="title" name="title" value="Untitled-1"/>
 
             <label for="rows">Rows:</label>
             <input type="number" id="rows" name="rows" value="6" min="2" max="20"/>
@@ -33,18 +33,19 @@
             <input type="color" id="mc" name="mc" value="#ffffff"/>
 
             <label for="cc">Contrast Color:</label>
-            <input type="color" id="cc" name="cc" value="#555555"/>
+            <input type="color" id="cc" name="cc" value="#c67676"/>
 
             <button id="create">Create Chart</button>
             <button id="download">Download Chart</button>
         </div>
         <hr/>
         <div id="container">
-            <h1 id="headerTitle" contentEditable="true">Random Knit 🖉</h1>
+            <h1 id="headerTitle"></h1>
             <div id="tileContainer">
                 <div id="tile"></div>
+                <div id="chart"></div>
             </div>
-            <div id="chart"></div>
+            <div id="preview"></div>
         </div>
     </body>
 </html>

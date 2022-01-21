@@ -20,6 +20,17 @@ button {
 .row, #stitchLabels {
     display:flex;
 }
+
+#stitchLabels.span-2 {
+    grid-column-start:span 2
+}
+#stitchLabels.span-1 {
+    grid-column-start:span 1
+}
+
+#rowLabels {
+    grid-row-start: span 2
+}
 .chartLabel {
     color: var(--lightText);
     height: 20px;
@@ -38,21 +49,30 @@ button {
     background-color: var(--mc);
 }
 
-#chart {
+#preview {
     display: grid;
-    /* grid-template-rows: repeat(2, 1fr); */
     grid-template-columns: repeat(4, 1fr);
-    /* grid-column-gap: 0; */
-    /* grid-row-gap: 0; */
     width: fit-content;
 }
 
-#chart .stitch {
+#chart{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    width: fit-content;
+}
+
+#chart.grid-col-2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: fit-content;
+}
+
+#preview .stitch {
     height: 12px;
     width: 15px;
 }
 
-#chart .chartLabel, #chart #stitchLabels {
+#preview .chartLabel, #preview #stitchLabels {
     display:none;
 }
 
@@ -78,4 +98,12 @@ button {
 
 .tile.mirrorV {
  flex-direction: column-reverse;   
+}
+
+#tile {
+    display:none;
+}
+
+#chart .tile {
+    display:flex;
 }

@@ -7,23 +7,26 @@ window.addEventListener('load', () => {
     document.getElementById('title').addEventListener('change', (e) => {
         document.getElementById('headerTitle').innerText = e.target.value;
     });
+    
 
-    document.getElementById('mirrorH').addEventListener('change', (e) => {
-        const tile = document.getElementById('tile');
-        const chart = document.getElementById('chart');
-        chart.innerHTML = '';
-        addTilesToChart(tile, true, e.target.checked)
-    });
-    document.getElementById('mirrorV').addEventListener('change', (e) => {
-        const tile = document.getElementById('tile');
-        const chart = document.getElementById('chart');
-        const mirrorH = document.getElementById('mirrorH').checked;
-        chart.innerHTML = '';
-        addTilesToChart(tile, true, mirrorH, e.target.checked)
-    });
+    document.getElementById('mirrorH').addEventListener('change', updatePreview);
+    document.getElementById('mirrorV').addEventListener('change', updatePreview);
+    document.getElementById('enableTile').addEventListener('change', updatePreview);
 })
 
-
+const updatePreview = () => {
+    const rows = +document.getElementById('rows').value;
+        const stitches = +document.getElementById('stitches').value;
+        const tile = document.getElementById('tile');
+        const preview = document.getElementById('preview');
+        const mirrorH = document.getElementById('mirrorH').checked;
+        const mirrorV = document.getElementById('mirrorV').checked;
+        const enableTile = document.getElementById('enableTile').checked;
+        preview.innerHTML = '';
+        
+        addTilesToPreview(tile, enableTile, mirrorH, mirrorV)
+        createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches)
+}
 
 const handleCreate = () => {
     const rows = +document.getElementById('rows').value;
@@ -33,21 +36,21 @@ const handleCreate = () => {
     const mirrorV = document.getElementById('mirrorV').checked;
     const mc = document.getElementById('mc').value;
     const cc = document.getElementById('cc').value;
-    
+    document.getElementById('headerTitle').innerText = document.getElementById('title').value;
     clearDiv('tile');
-    clearDiv('chart');
+    clearDiv('preview');
     validateConfig(rows, stitches, 'configErrors');
     const tile = createTile(rows, stitches, mc, cc, 'random');
-    addTilesToChart(tile, enableTile, mirrorH, mirrorV);
-    randomizeChart(rows, stitches, tile, mc, cc);
+    addTilesToPreview(tile, enableTile, mirrorH, mirrorV);
 
+    createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches);
 }
 
 
 const createDivAndAppend = (id, className, parentId, mc) => {
     const newDiv = document.createElement('div');
     const parentDiv = document.getElementById(parentId)
-    newDiv.id = id;
+    newDiv.setAttribute('id', id);
     newDiv.className = className;
     if(mc) {
         newDiv.style.backgroundColor = mc;
@@ -78,65 +81,101 @@ const createTile = (rows, stitches, mc, cc, type) => {
             }
             createDivAndAppend(`stitch-${j}`, 'stitch', `row-${i}`, bgColor);
         }
-        createRowLabel(i);
     }
-    createDivAndAppend('stitchLabels', '', 'tile');
-    createStitchLabels(stitches);
     return document.getElementById('tile');
+}
+
+const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+    chart.className = '';
+    const tile0 = document.getElementById('tile-0').cloneNode('deep');
+    tile0.id = 'chart-tile-0';
+    chart.appendChild(tile0);
+    const chartStitches = mirrorH && enableTile ? stitches * 2 : stitches;
+    const chartRows = mirrorV && enableTile ? rows * 2 : rows;
+
+    if(enableTile) {
+        if(mirrorH) {
+            chart.className = 'grid-col-2'
+            const tile1 = document.getElementById('tile-1').cloneNode('deep');
+            tile1.id = 'chart-tile-1';
+            chart.appendChild(tile1);
+        }
+        if(mirrorV) {
+            const tile2 = document.getElementById('tile-4').cloneNode('deep');
+            tile2.id = 'chart-tile-2';
+            chart.appendChild(tile2);
+        }
+        if(mirrorV && mirrorH) {
+            const tile3 = document.getElementById('tile-5').cloneNode('deep');
+            tile3.id = 'chart-tile-3';
+            chart.appendChild(tile3);
+        }
+    }
+    
+ 
+    createDivAndAppend('stitchLabels', mirrorH ? 'span-2' : 'span-1', 'chart');
+    createStitchLabels(chartStitches);
+    createRowLabels(chartRows, mirrorH, enableTile)
+   
 }
 
 const clearDiv = (id) => {
     document.getElementById(id).innerHTML = '';
 }
 
-const randomizeChart = (rows, stitches, baseRepeat, mc, cc) => {
-    let firstRowStitches = document.querySelectorAll('#row-0 .stitch');
-
-    firstRowStitches.forEach((stitch, index) => {
-        if(!index % baseRepeat) {
-            stitch.style.backgroundColor = cc;
-        }
-    })
-
-}
 
 
-const createRowLabel = (rowNumber) => {
-    const rowLabel = createDivAndAppend(`rowNumber-${rowNumber}`, 'chartLabel', `row-${rowNumber}`);
-    rowLabel.innerHTML = rowNumber;
+const createRowLabels = (numberOfRows, mirrorH, enableTile) => {
+    const chart = document.getElementById('chart');
+    const rowLabels = document.createElement('div');
+    const rightMostTile = mirrorH && enableTile ? document.getElementById('chart-tile-1') : document.getElementById('chart-tile-0');
+    rowLabels.id = 'rowLabels'
+    rightMostTile.insertAdjacentElement('afterend',rowLabels)
+    for(let j = numberOfRows; j > 0; j--) {
+        const rowLabel = createDivAndAppend(`rowNumber-${j}`, 'chartLabel', 'rowLabels');
+        rowLabel.innerHTML = j;
+        rowLabels.appendChild(rowLabel);
+    }
+    
 }
 
 const createStitchLabels = (numberOfStitches) => {
     for(let j = numberOfStitches; j > 0; j--) {
-        const stitchLabel = createDivAndAppend(`rowNumber-${j}`, 'chartLabel', 'stitchLabels');
+        const stitchLabel = createDivAndAppend(`stitchNumber-${j}`, 'chartLabel', 'stitchLabels');
         stitchLabel.innerHTML = j;
     }
 }
 
-const addTilesToChart = (tile, enableTile, mirrorH, mirrorV) => {
+const addTilesToPreview = (tile, enableTile, mirrorH, mirrorV) => {
     const numberOfTiles = enableTile ? 16 : 1;
-    const tilesToMirrorV = [4,5,6,7,12,13,14,15]; //todo find better way to do this
-    const chart = document.getElementById('chart');
+    const preview = document.getElementById('preview');
     for(let i = 0; i < numberOfTiles; i++) {
         const newTile = tile.cloneNode('deep');
         newTile.id = `tile-${i}`;
         newTile.className = 'tile';
         newTile.setAttribute('data-tileNumber', i);
+        const rowNumber = Math.floor(i/4);
+        newTile.setAttribute('data-rowNumber', rowNumber);
         if(mirrorH && i % 2) {
             newTile.classList.add('mirrorH')
         }
-        if(mirrorV && tilesToMirrorV.includes(i)) {
+        
+        if(mirrorV && rowNumber % 2) {
             newTile.classList.add('mirrorV')
         }
-
-        chart.appendChild(newTile);
+        newTile.querySelectorAll('div').forEach(div => {
+            div.setAttribute('data-id', div.id);
+            div.removeAttribute('id')
+        })
+        preview.appendChild(newTile);
     }
 }
 
 const saveAsPDF = () => {
     const { jsPDF } = window.jspdf;
     var doc = new jsPDF();
-    console.log(doc)
     doc.html(`<html><${document.body}></html>`);
     doc.save('div.pdf');
 }
