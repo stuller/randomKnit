@@ -1,33 +1,63 @@
-let chartCount = 0;
+
+let titleEl, headerTitleEl, mirrorHEl, mirrorVEl, enableTileEl, mcEl, ccEl, stitchesEl, rowsEl, pageConfig, stitchConfig, rowConfig;
 
 window.addEventListener('load', () => {
 
+
+    titleEl = document.getElementById('title');
+    headerTitleEl = document.getElementById('headerTitle');
+    mirrorHEl = document.getElementById('mirrorH');
+    mirrorVEl = document.getElementById('mirrorV');
+    enableTileEl = document.getElementById('enableTile');
+    mcEl = document.getElementById('mc');
+    ccEl = document.getElementById('cc');
+    stitchesEl = document.getElementById('stitches');
+    rowsEl = document.getElementById('rows');
+    
+    stitchConfig = stitchesEl.value;
+    rowConfig = rowsEl.value;
+
     document.getElementById('create').addEventListener('click', handleCreate);
+    document.getElementById('randomize').addEventListener('click', handleCreate);
     document.getElementById('download').addEventListener('click', convertHTMLToPDF)
-    document.getElementById('title').addEventListener('change', (e) => {
-        document.getElementById('headerTitle').innerText = e.target.value;
-        chartCount = 0;
+    titleEl.addEventListener('change', (e) => {
+        headerTitleEl.innerText = e.target.value;
     });
     
+    mirrorHEl.addEventListener('change', updatePreview);
+    mirrorVEl.addEventListener('change', updatePreview);
+    enableTileEl.addEventListener('change', updatePreview);
+    mcEl.addEventListener('change', updatePreview);
+    ccEl.addEventListener('change', updatePreview);
 
-    document.getElementById('mirrorH').addEventListener('change', updatePreview);
-    document.getElementById('mirrorV').addEventListener('change', updatePreview);
-    document.getElementById('enableTile').addEventListener('change', updatePreview);
-    document.getElementById('mc').addEventListener('change', updatePreview);
-    document.getElementById('cc').addEventListener('change', updatePreview);
+    const searchParams = new URLSearchParams(document.location.search);
+    pageConfig = Object.fromEntries(searchParams)
+    
+    titleEl.value = pageConfig.title ? pageConfig.title : titleEl.value;
+    stitchesEl.value = pageConfig.stitches ? pageConfig.stitches : stitchesEl.value;
+    rowsEl.value = pageConfig.rows ? pageConfig.rows : rowsEl.value;
+    enableTileEl.value = pageConfig.enableTile ? pageConfig.enableTile : enableTileEl.value;
+    mirrorHEl.value = pageConfig.mirrorH ? pageConfig.mirrorH : mirrorHEl.value;
+    mirrorVEl.value = pageConfig.mirrorV ? pageConfig.mirrorV : mirrorVEl.value;
+
+    ccEl.value = pageConfig.cc ? pageConfig.cc : ccEl.value;
+    mcEl.value = pageConfig.mc ? pageConfig.mc : mcEl.value;
+
+    handleCreate(true);
 })
 
 const getConfig = () => {
     return {
-        rows: +document.getElementById('rows').value,
-        stitches: +document.getElementById('stitches').value,
+        rows: rowConfig,
+        stitches: stitchConfig,
         tile: document.getElementById('tile'),
         preview: document.getElementById('preview'),
-        mirrorH: document.getElementById('mirrorH').checked,
-        mirrorV: document.getElementById('mirrorV').checked,
-        enableTile: document.getElementById('enableTile').checked,
-        mc: document.getElementById('mc').value,
-        cc: document.getElementById('cc').value
+        mirrorH: mirrorHEl.checked,
+        mirrorV: mirrorVEl.checked,
+        enableTile: enableTileEl.checked,
+        mc: mcEl.value,
+        cc: ccEl.value,
+        title: titleEl.value
     }
 }
 
@@ -36,17 +66,19 @@ const updatePreview = () => {
     preview.innerHTML = '';
     updateTileColors(mc, cc);
     addTilesToPreview(tile, enableTile, mirrorH, mirrorV)
-    createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches)
+    createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches);
+    updateUrl();
 }
 
-const handleCreate = () => {
-    chartCount++;
+const handleCreate = (firstLoad=false) => {
+    stitchConfig = stitchesEl.value;
+    rowConfig = rowsEl.value;
     const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc} = getConfig();
-    document.getElementById('headerTitle').innerText = `${document.getElementById('title').value}-${chartCount}`
+    document.getElementById('headerTitle').innerText = `${titleEl.value}`
     clearDiv('tile');
     clearDiv('preview');
     validateConfig(rows, stitches, 'configErrors');
-    const tile = createTile(rows, stitches, mc, cc);
+    const tile = createTile(rows, stitches, mc, cc, firstLoad);
     addTilesToPreview(tile, enableTile, mirrorH, mirrorV);
     createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches);
 }
@@ -79,15 +111,25 @@ const validateConfig = (rows, stitches, errorDivId) => {
     errorDiv.innerHTML = errors;
 }
 
-const createTile = (rows, stitches, mc, cc) => {
+const createTile = (rows, stitches, mc, cc, firstLoad=false) => {
+    console.log(firstLoad)
     let bgColor = mc;
+    let parsedTileData;
+    if(pageConfig.hasOwnProperty('tileData')) {
+        parsedTileData = pageConfig.tileData.split('-').reverse().map(row => row.split('').reverse())
+    }
     for(let i = rows; i > 0; i--) {
         createDivAndAppend(`row-${i}`, 'row', 'tile');
         for(let j = stitches; j > 0; j--) {
-            bgColor = Math.round(Math.random(2)) ? mc : cc;
+            if(firstLoad === true && parsedTileData) {
+                bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : cc;
+            } else {
+                bgColor = Math.round(Math.random(2)) ? mc : cc;
+            }
             createDivAndAppend(`stitch-${j}`, 'stitch', `row-${i}`, bgColor);
         }
     }
+    console.log(getConfig())
     return document.getElementById('tile');
 }
 
@@ -127,11 +169,11 @@ const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
         }
     }
     
- 
+
     createDivAndAppend('stitchLabels', mirrorH ? 'span-2' : 'span-1', 'chart');
     createStitchLabels(chartStitches);
     createRowLabels(chartRows, mirrorH, enableTile)
-   
+    updateUrl();
 }
 
 const clearDiv = (id) => {
@@ -189,6 +231,20 @@ const addTilesToPreview = (tile, enableTile, mirrorH, mirrorV) => {
     preview.style.gridTemplateColumns = `repeat(${stitchRepeats}, 1fr)`
 }
 
+const updateUrl = () => {
+    const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, title} = getConfig();
+    const tileData = getCurrentTileData();
+    const url =`${window.location.pathname}?title=${encodeURIComponent(title)}&rows=${rows}&stitches=${stitches}&mirrorH=${mirrorH}&mirrorV=${mirrorV}&enableTile=${enableTile}&mc=${encodeURIComponent(mc)}&cc=${encodeURIComponent(cc)}&tileData=${tileData}`;
+    window.history.pushState('', title, url);
+}
+
+const getCurrentTileData = () => {
+    const {tile} = getConfig();
+    const tileData = Array.from(tile.querySelectorAll('.row')).map(row => {
+        return Array.from(row.querySelectorAll('.stitch')).map(stitch => stitch.className.includes('mc') ? 0 : 1).join('')
+    }).join('-')
+    return tileData;
+}
 
 function convertHTMLToPDF() {
     const { jsPDF } = window.jspdf;
@@ -205,3 +261,4 @@ function convertHTMLToPDF() {
     });
 
 }
+
