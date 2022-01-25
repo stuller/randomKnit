@@ -29,6 +29,7 @@ window.addEventListener('load', () => {
     enableTileEl.addEventListener('change', updatePreview);
     mcEl.addEventListener('change', updatePreview);
     ccEl.addEventListener('change', updatePreview);
+    titleEl.addEventListener('change', updatePreview);
 
     const searchParams = new URLSearchParams(document.location.search);
     pageConfig = Object.fromEntries(searchParams)
