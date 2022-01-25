@@ -13,6 +13,8 @@ window.addEventListener('load', () => {
     document.getElementById('mirrorH').addEventListener('change', updatePreview);
     document.getElementById('mirrorV').addEventListener('change', updatePreview);
     document.getElementById('enableTile').addEventListener('change', updatePreview);
+    document.getElementById('mc').addEventListener('change', updatePreview);
+    document.getElementById('cc').addEventListener('change', updatePreview);
 })
 
 const getConfig = () => {
@@ -30,8 +32,9 @@ const getConfig = () => {
 }
 
 const updatePreview = () => {
-    const {rows, stitches, tile, mirrorH, mirrorV, enableTile} = getConfig();
+    const {rows, stitches, tile, mirrorH, mirrorV, enableTile, mc, cc} = getConfig();
     preview.innerHTML = '';
+    updateTileColors(mc, cc);
     addTilesToPreview(tile, enableTile, mirrorH, mirrorV)
     createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches)
 }
@@ -49,13 +52,16 @@ const handleCreate = () => {
 }
 
 
-const createDivAndAppend = (id, className, parentId, mc) => {
+const createDivAndAppend = (id, className, parentId, color) => {
+    const {mc} = getConfig();
     const newDiv = document.createElement('div');
     const parentDiv = document.getElementById(parentId)
     newDiv.setAttribute('id', id);
     newDiv.className = className;
-    if(mc) {
-        newDiv.style.backgroundColor = mc;
+    if(color) {
+        newDiv.style.backgroundColor = color;
+        newDiv.style.borderColor = color === '#ffffff' ? '#bbb' : '#fff'
+        newDiv.className = color === mc ? 'stitch mc' : 'stitch cc'
     }
     parentDiv.appendChild(newDiv);
     return newDiv;
@@ -83,6 +89,12 @@ const createTile = (rows, stitches, mc, cc) => {
         }
     }
     return document.getElementById('tile');
+}
+
+const updateTileColors = (mc, cc) => {
+    document.querySelectorAll('#tile .stitch').forEach(stitch => {
+        stitch.style.backgroundColor = stitch.className.includes('mc') ? mc : cc;
+    });
 }
 
 const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
@@ -152,7 +164,6 @@ const createStitchLabels = (numberOfStitches) => {
 const addTilesToPreview = (tile, enableTile, mirrorH, mirrorV) => {
     const stitches = document.getElementById('stitches').value;
     const stitchRepeats = Math.floor(50/stitches) % 2 ? Math.floor(50/stitches) + 1 : Math.floor(50/stitches);
-    console.log(stitches)
     const numberOfTiles = enableTile ? stitchRepeats * stitchRepeats : 1;
     const preview = document.getElementById('preview');
     for(let i = 0; i < numberOfTiles; i++) {
