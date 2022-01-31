@@ -37,9 +37,10 @@ window.addEventListener('load', () => {
     titleEl.value = pageConfig.title ? pageConfig.title : titleEl.value;
     stitchesEl.value = pageConfig.stitches ? pageConfig.stitches : stitchesEl.value;
     rowsEl.value = pageConfig.rows ? pageConfig.rows : rowsEl.value;
-    enableTileEl.value = pageConfig.enableTile ? pageConfig.enableTile : enableTileEl.value;
-    mirrorHEl.value = pageConfig.mirrorH ? pageConfig.mirrorH : mirrorHEl.value;
-    mirrorVEl.value = pageConfig.mirrorV ? pageConfig.mirrorV : mirrorVEl.value;
+    enableTileEl.checked = pageConfig.enableTile ? pageConfig.enableTile === 'true' ? true : false  : enableTileEl.value;
+    mirrorHEl.checked = pageConfig.mirrorH ? pageConfig.mirrorH === 'true' ? true : false : mirrorHEl.value;
+    mirrorVEl.checked = pageConfig.mirrorV ? pageConfig.mirrorV === 'true' ? true : false : mirrorVEl.value;
+    
 
     ccEl.value = pageConfig.cc ? pageConfig.cc : ccEl.value;
     mcEl.value = pageConfig.mc ? pageConfig.mc : mcEl.value;
