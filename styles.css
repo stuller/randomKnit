@@ -77,6 +77,14 @@ button {
     width: 15px;
 }
 
+#preview .stitch {
+    height: 21px;
+    width: 17px;
+    clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0);
+    margin-top: -7px;
+    border: none;
+}
+
 #preview .chartLabel, #preview #stitchLabels {
     display:none;
 }
@@ -138,5 +146,13 @@ button {
         height: 4px;
         width: 5px;
         border: 1px solid #ccc;
+    }
+
+    #preview .stitch {
+        height: 8px;
+        width: 7px;
+        clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0);
+        margin-top: -2.5px;
+        border: none;
     }
 }

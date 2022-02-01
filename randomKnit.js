@@ -1,6 +1,14 @@
 
 let titleEl, headerTitleEl, mirrorHEl, mirrorVEl, enableTileEl, mcEl, ccEl, stitchesEl, rowsEl, pageConfig, stitchConfig, rowConfig;
 
+window.onpopstate = function(event) {
+    console.log(event.state)
+    console.log(window.location.href)
+    if(event.state.hasOwnProperty('url') && event.state.url !== window.location.href) {
+        window.location.href = event.state.url;
+    }
+
+};
 window.addEventListener('load', () => {
 
 
@@ -94,7 +102,6 @@ const createDivAndAppend = (id, className, parentId, color) => {
     newDiv.className = className;
     if(color) {
         newDiv.style.backgroundColor = color;
-        newDiv.style.borderColor = color === '#ffffff' ? '#bbb' : '#fff'
         newDiv.className = color === mc ? 'stitch mc' : 'stitch cc'
     }
     parentDiv.appendChild(newDiv);
@@ -131,7 +138,6 @@ const createTile = (rows, stitches, mc, cc, firstLoad=false) => {
             createDivAndAppend(`stitch-${j}`, 'stitch', `row-${i}`, bgColor);
         }
     }
-    console.log(getConfig())
     return document.getElementById('tile');
 }
 
@@ -176,6 +182,7 @@ const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
     createStitchLabels(chartStitches);
     createRowLabels(chartRows, mirrorH, enableTile)
     updateUrl();
+    
 }
 
 const clearDiv = (id) => {
@@ -237,7 +244,7 @@ const updateUrl = () => {
     const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, title} = getConfig();
     const tileData = getCurrentTileData();
     const url =`${window.location.pathname}?title=${encodeURIComponent(title)}&rows=${rows}&stitches=${stitches}&mirrorH=${mirrorH}&mirrorV=${mirrorV}&enableTile=${enableTile}&mc=${encodeURIComponent(mc)}&cc=${encodeURIComponent(cc)}&tileData=${tileData}`;
-    window.history.pushState('', title, url);
+    window.history.pushState({url: window.location.href}, title, url);
 }
 
 const getCurrentTileData = () => {
