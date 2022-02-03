@@ -1,9 +1,7 @@
 
-let titleEl, headerTitleEl, mirrorHEl, mirrorVEl, enableTileEl, mcEl, ccEl, stitchesEl, rowsEl, pageConfig, stitchConfig, rowConfig;
+let typeEl, titleEl, headerTitleEl, mirrorHEl, mirrorVEl, enableTileEl, mcEl, ccEl, cc2El, stitchesEl, rowsEl, pageConfig, stitchConfig, rowConfig;
 
 window.onpopstate = function(event) {
-    console.log(event.state)
-    console.log(window.location.href)
     if(event.state.hasOwnProperty('url') && event.state.url !== window.location.href) {
         window.location.href = event.state.url;
     }
@@ -11,7 +9,7 @@ window.onpopstate = function(event) {
 };
 window.addEventListener('load', () => {
 
-
+    typeEl = document.getElementById('type');
     titleEl = document.getElementById('title');
     headerTitleEl = document.getElementById('headerTitle');
     mirrorHEl = document.getElementById('mirrorH');
@@ -19,6 +17,7 @@ window.addEventListener('load', () => {
     enableTileEl = document.getElementById('enableTile');
     mcEl = document.getElementById('mc');
     ccEl = document.getElementById('cc');
+    cc2El = document.getElementById('cc2');
     stitchesEl = document.getElementById('stitches');
     rowsEl = document.getElementById('rows');
     
@@ -37,11 +36,13 @@ window.addEventListener('load', () => {
     enableTileEl.addEventListener('change', updatePreview);
     mcEl.addEventListener('change', updatePreview);
     ccEl.addEventListener('change', updatePreview);
+    cc2El.addEventListener('change', updatePreview);
     titleEl.addEventListener('change', updatePreview);
 
     const searchParams = new URLSearchParams(document.location.search);
     pageConfig = Object.fromEntries(searchParams)
     
+    typeEl.value = pageConfig.type ? pageConfig.type : typeEl.value;
     titleEl.value = pageConfig.title ? pageConfig.title : titleEl.value;
     stitchesEl.value = pageConfig.stitches ? pageConfig.stitches : stitchesEl.value;
     rowsEl.value = pageConfig.rows ? pageConfig.rows : rowsEl.value;
@@ -50,14 +51,16 @@ window.addEventListener('load', () => {
     mirrorVEl.checked = pageConfig.mirrorV ? pageConfig.mirrorV === 'true' ? true : false : mirrorVEl.value;
     
 
-    ccEl.value = pageConfig.cc ? pageConfig.cc : ccEl.value;
     mcEl.value = pageConfig.mc ? pageConfig.mc : mcEl.value;
+    ccEl.value = pageConfig.cc ? pageConfig.cc : ccEl.value;
+    cc2El.value = pageConfig.cc2 ? pageConfig.cc2 : cc2El.value;
 
     handleCreate(true);
 })
 
 const getConfig = () => {
     return {
+        type: typeEl.value,
         rows: rowConfig,
         stitches: stitchConfig,
         tile: document.getElementById('tile'),
@@ -67,42 +70,43 @@ const getConfig = () => {
         enableTile: enableTileEl.checked,
         mc: mcEl.value,
         cc: ccEl.value,
+        cc2: cc2El.value,
         title: titleEl.value
     }
 }
 
 const updatePreview = () => {
-    const {rows, stitches, tile, mirrorH, mirrorV, enableTile, mc, cc} = getConfig();
+    const {type, rows, stitches, tile, mirrorH, mirrorV, enableTile, mc, cc, cc2} = getConfig();
     preview.innerHTML = '';
-    updateTileColors(mc, cc);
+    updateTileColors(mc, cc, cc2);
     addTilesToPreview(tile, enableTile, mirrorH, mirrorV)
-    createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches);
+    createChart(type, tile, enableTile, mirrorH, mirrorV, rows, stitches);
     updateUrl();
 }
 
 const handleCreate = (firstLoad=false) => {
     stitchConfig = stitchesEl.value;
     rowConfig = rowsEl.value;
-    const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc} = getConfig();
+    const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, cc2, type} = getConfig();
     document.getElementById('headerTitle').innerText = `${titleEl.value}`
     clearDiv('tile');
     clearDiv('preview');
     validateConfig(rows, stitches, 'configErrors');
-    const tile = createTile(rows, stitches, mc, cc, firstLoad);
+    const tile = createTile(rows, stitches, mc, cc, cc2, type, firstLoad);
     addTilesToPreview(tile, enableTile, mirrorH, mirrorV);
-    createChart(tile, enableTile, mirrorH, mirrorV, rows, stitches);
+    createChart(type, tile, enableTile, mirrorH, mirrorV, rows, stitches);
 }
 
 
 const createDivAndAppend = (id, className, parentId, color) => {
-    const {mc} = getConfig();
+    const {mc, cc, cc2} = getConfig();
     const newDiv = document.createElement('div');
     const parentDiv = document.getElementById(parentId)
     newDiv.setAttribute('id', id);
     newDiv.className = className;
     if(color) {
         newDiv.style.backgroundColor = color;
-        newDiv.className = color === mc ? 'stitch mc' : 'stitch cc'
+        newDiv.className = color === mc ? 'stitch mc' : color === cc ? 'stitch cc' : 'stitch cc2'
     }
     parentDiv.appendChild(newDiv);
     return newDiv;
@@ -120,34 +124,60 @@ const validateConfig = (rows, stitches, errorDivId) => {
     errorDiv.innerHTML = errors;
 }
 
-const createTile = (rows, stitches, mc, cc, firstLoad=false) => {
-    console.log(firstLoad)
+const createTile = (rows, stitches, mc, cc, cc2, type, firstLoad=false) => {
     let bgColor = mc;
     let parsedTileData;
     if(pageConfig.hasOwnProperty('tileData')) {
         parsedTileData = pageConfig.tileData.split('-').reverse().map(row => row.split('').reverse())
     }
+    //TODO refactor, this is getting ugly
     for(let i = rows; i > 0; i--) {
         createDivAndAppend(`row-${i}`, 'row', 'tile');
+        if(type === '3-color-fair-isle') {
+            const colors = [mc, cc, cc2];
+            const randomizedColors = colors.sort(() => 0.5 - Math.random());
+            fi1 = randomizedColors[0];
+            fi2 = randomizedColors[1];
+
+        }
         for(let j = stitches; j > 0; j--) {
-            if(firstLoad === true && parsedTileData) {
-                bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : cc;
-            } else {
-                bgColor = Math.round(Math.random(2)) ? mc : cc;
+            
+            if(type === '3-color-stranded') {
+                const random = Math.floor(Math.random() * 3);
+                if(firstLoad === true && parsedTileData) {
+                    bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : +parsedTileData[i-1][j-1] === 1 ? cc : cc2;
+                } else {
+                    bgColor =  random === 0 ? mc : random === 1 ? cc : cc2;
+                }
+            } else if(type === '2-color') {
+                const random = Math.floor(Math.random() * 2);
+                if(firstLoad === true && parsedTileData) {
+                    bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : cc;
+                } else {
+                    bgColor =  random === 0 ? mc : cc;
+                }
+            } else { //fair isle
+                const random = Math.floor(Math.random() * 2);
+                if(firstLoad === true && parsedTileData) {
+                    bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : +parsedTileData[i-1][j-1] === 1 ? cc : cc2;
+                } else {
+                    bgColor =  random === 0 ? fi1 : fi2;
+                }
             }
+            
             createDivAndAppend(`stitch-${j}`, 'stitch', `row-${i}`, bgColor);
         }
     }
     return document.getElementById('tile');
 }
 
-const updateTileColors = (mc, cc) => {
+const updateTileColors = (mc, cc, cc2) => {
     document.querySelectorAll('#tile .stitch').forEach(stitch => {
-        stitch.style.backgroundColor = stitch.className.includes('mc') ? mc : cc;
+        stitch.style.backgroundColor = stitch.className.includes('mc') ? mc : stitch.className.includes('cc2') ? cc2 : cc;
     });
 }
 
-const createChart = (tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
+const createChart = (type, tile, enableTile, mirrorH, mirrorV, rows, stitches) => {
     const chart = document.getElementById('chart');
     chart.innerHTML = '';
     chart.className = '';
@@ -241,16 +271,16 @@ const addTilesToPreview = (tile, enableTile, mirrorH, mirrorV) => {
 }
 
 const updateUrl = () => {
-    const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, title} = getConfig();
+    const {type, rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, cc2, title} = getConfig();
     const tileData = getCurrentTileData();
-    const url =`${window.location.pathname}?title=${encodeURIComponent(title)}&rows=${rows}&stitches=${stitches}&mirrorH=${mirrorH}&mirrorV=${mirrorV}&enableTile=${enableTile}&mc=${encodeURIComponent(mc)}&cc=${encodeURIComponent(cc)}&tileData=${tileData}`;
+    const url =`${window.location.pathname}?type=${type}&title=${encodeURIComponent(title)}&rows=${rows}&stitches=${stitches}&mirrorH=${mirrorH}&mirrorV=${mirrorV}&enableTile=${enableTile}&mc=${encodeURIComponent(mc)}&cc=${encodeURIComponent(cc)}&cc2=${encodeURIComponent(cc2)}&tileData=${tileData}`;
     window.history.pushState({url: window.location.href}, title, url);
 }
 
 const getCurrentTileData = () => {
     const {tile} = getConfig();
     const tileData = Array.from(tile.querySelectorAll('.row')).map(row => {
-        return Array.from(row.querySelectorAll('.stitch')).map(stitch => stitch.className.includes('mc') ? 0 : 1).join('')
+        return Array.from(row.querySelectorAll('.stitch')).map(stitch => stitch.className.includes('mc') ? 0 : stitch.className.includes('2') ? 2 : 1).join('')
     }).join('-')
     return tileData;
 }
