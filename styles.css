@@ -80,9 +80,9 @@ button {
 #preview .stitch {
     height: 21px;
     width: 17px;
-    clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0);
-    margin-top: -7px;
-    border: none;
+    clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0); 
+    margin-top: -6px;
+    border: 1px solid #ccc;
 }
 
 #preview .chartLabel, #preview #stitchLabels {
@@ -95,7 +95,7 @@ button {
     grid-column-gap: 3em;
 }
 
-#headerTitle {
+#chartInfo {
     grid-column-start: 1;
     grid-column-end: 3;
 }

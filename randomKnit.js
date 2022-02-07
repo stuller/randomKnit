@@ -27,8 +27,9 @@ window.addEventListener('load', () => {
     document.getElementById('create').addEventListener('click', handleCreate);
     document.getElementById('randomize').addEventListener('click', handleCreate);
     document.getElementById('download').addEventListener('click', convertHTMLToPDF)
+    document.getElementById('rotateTile').addEventListener('click', handleRotate);
     titleEl.addEventListener('change', (e) => {
-        headerTitleEl.innerText = e.target.value;
+        document.getElementById('chartLink').innerText = e.target.value;
     });
     
     mirrorHEl.addEventListener('change', updatePreview);
@@ -88,7 +89,7 @@ const handleCreate = (firstLoad=false) => {
     stitchConfig = stitchesEl.value;
     rowConfig = rowsEl.value;
     const {rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, cc2, type} = getConfig();
-    document.getElementById('headerTitle').innerText = `${titleEl.value}`
+    document.getElementById('chartLink').innerText = `${titleEl.value}`
     clearDiv('tile');
     clearDiv('preview');
     validateConfig(rows, stitches, 'configErrors');
@@ -97,6 +98,34 @@ const handleCreate = (firstLoad=false) => {
     createChart(type, tile, enableTile, mirrorH, mirrorV, rows, stitches);
 }
 
+const handleRotate = () => {
+    const {rows, stitches} = getConfig();
+    if(pageConfig.hasOwnProperty('tileData')) {
+        const parsedTileData = pageConfig.tileData.split('-').reverse().map(row => row.split('').reverse());
+        const newRows = +stitches;
+        const newStitches = +rows;
+        const newTile = [];
+        for(let row = 0; row < newRows; row++) {
+            const newRow = [];
+            for(let stitch = newStitches; stitch > 0; stitch--) {
+                console.log(parsedTileData, stitch, row)
+                newRow.push(parsedTileData[stitch - 1][row])
+            }
+            newTile.push(newRow);
+            
+        }
+        const newTileData = newTile.map(a => a.join('')).join('-');
+        stitchesEl.value = newStitches;
+        rowsEl.value = newRows;
+        pageConfig.tileData = newTileData;
+        rowConfig = newRows;
+        stitchConfig = newStitches;
+        handleCreate(true)
+        
+    } else {
+        return;
+    }
+}
 
 const createDivAndAppend = (id, className, parentId, color) => {
     const {mc, cc, cc2} = getConfig();
@@ -127,48 +156,47 @@ const validateConfig = (rows, stitches, errorDivId) => {
 const createTile = (rows, stitches, mc, cc, cc2, type, firstLoad=false) => {
     let bgColor = mc;
     let parsedTileData;
-    if(pageConfig.hasOwnProperty('tileData')) {
+    if(pageConfig.hasOwnProperty('tileData') && firstLoad === true) {
         parsedTileData = pageConfig.tileData.split('-').reverse().map(row => row.split('').reverse())
+    } else {
+        parsedTileData = createTileData(rows, stitches, type)
     }
-    //TODO refactor, this is getting ugly
     for(let i = rows; i > 0; i--) {
         createDivAndAppend(`row-${i}`, 'row', 'tile');
-        if(type === '3-color-fair-isle') {
-            const colors = [mc, cc, cc2];
-            const randomizedColors = colors.sort(() => 0.5 - Math.random());
-            fi1 = randomizedColors[0];
-            fi2 = randomizedColors[1];
-
-        }
         for(let j = stitches; j > 0; j--) {
-            
-            if(type === '3-color-stranded') {
-                const random = Math.floor(Math.random() * 3);
-                if(firstLoad === true && parsedTileData) {
-                    bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : +parsedTileData[i-1][j-1] === 1 ? cc : cc2;
-                } else {
-                    bgColor =  random === 0 ? mc : random === 1 ? cc : cc2;
-                }
-            } else if(type === '2-color') {
-                const random = Math.floor(Math.random() * 2);
-                if(firstLoad === true && parsedTileData) {
-                    bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : cc;
-                } else {
-                    bgColor =  random === 0 ? mc : cc;
-                }
-            } else { //fair isle
-                const random = Math.floor(Math.random() * 2);
-                if(firstLoad === true && parsedTileData) {
-                    bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : +parsedTileData[i-1][j-1] === 1 ? cc : cc2;
-                } else {
-                    bgColor =  random === 0 ? fi1 : fi2;
-                }
-            }
-            
+            bgColor = +parsedTileData[i-1][j-1]  === 0 ? mc : +parsedTileData[i-1][j-1] === 1 ? cc : cc2;
             createDivAndAppend(`stitch-${j}`, 'stitch', `row-${i}`, bgColor);
         }
     }
     return document.getElementById('tile');
+}
+
+const createTileData = (rows, stitches, type) => {
+    const tileData = [];
+    for(let i = rows; i > 0; i--) {
+        const row = [];
+        if(type === '3-color-fair-isle') {
+            const colors = [0,1,2];
+            const randomizedColors = colors.sort(() => 0.5 - Math.random());
+            fi1 = randomizedColors[0];
+            fi2 = randomizedColors[1];
+        }
+        for(let j = stitches; j > 0; j--) {
+            let bgColor;
+            if(type === '3-color-stranded') {
+                bgColor = Math.floor(Math.random() * 3);
+            } else if(type === '2-color') {
+                bgColor = Math.floor(Math.random() * 2);
+            } else { //fair isle
+                const random = Math.floor(Math.random() * 2);
+                bgColor =  random === 0 ? fi1 : fi2;
+            }
+            
+            row.push(bgColor);
+        }
+        tileData.push(row);
+    }
+    return tileData;
 }
 
 const updateTileColors = (mc, cc, cc2) => {
@@ -275,6 +303,9 @@ const updateUrl = () => {
     const tileData = getCurrentTileData();
     const url =`${window.location.pathname}?type=${type}&title=${encodeURIComponent(title)}&rows=${rows}&stitches=${stitches}&mirrorH=${mirrorH}&mirrorV=${mirrorV}&enableTile=${enableTile}&mc=${encodeURIComponent(mc)}&cc=${encodeURIComponent(cc)}&cc2=${encodeURIComponent(cc2)}&tileData=${tileData}`;
     window.history.pushState({url: window.location.href}, title, url);
+    const searchParams = new URLSearchParams(document.location.search);
+    pageConfig = Object.fromEntries(searchParams)
+    document.getElementById('chartLink').setAttribute('href', url);
 }
 
 const getCurrentTileData = () => {
@@ -286,18 +317,13 @@ const getCurrentTileData = () => {
 }
 
 function convertHTMLToPDF() {
-    const { jsPDF } = window.jspdf;
-
-    var doc = new jsPDF('l', 'mm', [1200, 1810]);
-    var pdfjs = document.querySelector('#container');
-
-    doc.html(pdfjs, {
-        callback: function(doc) {
-            doc.save(`${document.getElementById('headerTitle').innerHTML.replaceAll(/\s/gi, '-')}.pdf`);
-        },
-        x: 10,
-        y: 10
-    });
+    const options = {
+        enableLinks:true,
+        jsPDF: { orientation: 'p'},
+        html2canvas:  { width: 1400},
+    }
+    var element = document.getElementById('container');
+    var worker = html2pdf().set(options).from(element).save(`${document.getElementById('chartLink').innerText.replaceAll(/\s/gi, '-')}.pdf`);
 
 }
 
