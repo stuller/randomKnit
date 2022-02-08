@@ -28,6 +28,9 @@ window.addEventListener('load', () => {
     document.getElementById('randomize').addEventListener('click', handleCreate);
     document.getElementById('download').addEventListener('click', convertHTMLToPDF)
     document.getElementById('rotateTile').addEventListener('click', handleRotate);
+    document.getElementById('reset').addEventListener('click', () => {
+        window.location.href = window.location.pathname;
+    })
     titleEl.addEventListener('change', (e) => {
         document.getElementById('chartLink').innerText = e.target.value;
     });
@@ -108,7 +111,6 @@ const handleRotate = () => {
         for(let row = 0; row < newRows; row++) {
             const newRow = [];
             for(let stitch = newStitches; stitch > 0; stitch--) {
-                console.log(parsedTileData, stitch, row)
                 newRow.push(parsedTileData[stitch - 1][row])
             }
             newTile.push(newRow);

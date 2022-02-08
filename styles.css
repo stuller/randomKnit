@@ -11,6 +11,7 @@ fieldset {
     --cc: rgb(43, 42, 42);
     --error: rgb(128, 39, 39);
     --lightText: rgb(153, 153, 153);
+    --stitchBorders: rgba(0,0,0,.65)
 }
 label {
     margin-left: 1em;
@@ -47,7 +48,7 @@ button {
 .stitch {
     height: 20px;
     width: 25px;
-    border: 1px solid #888;
+    border: 1px solid var(--stitchBorders);
 }
 
 .mc {
@@ -82,7 +83,7 @@ button {
     width: 17px;
     clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0); 
     margin-top: -6px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--stitchBorders);
 }
 
 #preview .chartLabel, #preview #stitchLabels {
@@ -107,6 +108,7 @@ button {
 .tile {
     display: flex;
     flex-direction: column;
+    background-color:var(--stitchBorders);
 }
 
 .tile.mirrorV {
@@ -145,7 +147,7 @@ button {
     #preview .stitch {
         height: 4px;
         width: 5px;
-        border: 1px solid #ccc;
+        border: 1px solid var(--stitchBorders);
     }
 
     #preview .stitch {
