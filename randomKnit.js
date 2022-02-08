@@ -104,7 +104,7 @@ const handleCreate = (firstLoad=false) => {
 const handleRotate = () => {
     const {rows, stitches} = getConfig();
     if(pageConfig.hasOwnProperty('tileData')) {
-        const parsedTileData = pageConfig.tileData.split('-').reverse().map(row => row.split('').reverse());
+        const parsedTileData = pageConfig.tileData.split('-').map(row => row.split(''));
         const newRows = +stitches;
         const newStitches = +rows;
         const newTile = [];
