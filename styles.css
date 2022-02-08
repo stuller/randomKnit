@@ -22,7 +22,6 @@ button {
 .error {
     color: var(--error)
 }  
-
 .row, #stitchLabels {
     display:flex;
 }
@@ -59,7 +58,11 @@ button {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     width: fit-content;
+    background-color: var(--stitchBorders);
+    padding: 10px 5px 3px 5px;
+    border: .75em solid var(--stitchBorders);
 }
+
 
 #chart{
     display: grid;
@@ -108,7 +111,6 @@ button {
 .tile {
     display: flex;
     flex-direction: column;
-    background-color:var(--stitchBorders);
 }
 
 .tile.mirrorV {
@@ -145,6 +147,16 @@ button {
         margin: 0;
     }
     #preview .stitch {
+        border-style: solid;
+        border-width: 0.8em 0.8em 0 0;
+        content: '';
+        display: inline-block;
+        height: 0.75em;
+        position: relative;
+        transform: rotate(135deg);
+        width: 0.75em;
+    }
+    #preview .stitch {
         height: 4px;
         width: 5px;
         border: 1px solid var(--stitchBorders);
@@ -157,4 +169,6 @@ button {
         margin-top: -2.5px;
         border: none;
     }
+
+    
 }
