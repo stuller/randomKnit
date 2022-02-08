@@ -43,6 +43,16 @@ window.addEventListener('load', () => {
     cc2El.addEventListener('change', updatePreview);
     titleEl.addEventListener('change', updatePreview);
 
+    typeEl.addEventListener('change', (event) => {
+        const type = event.target.value;
+        const cc2Fieldset = document.getElementById('cc2-fieldset')
+        if(type === '2-color') {
+            cc2Fieldset.style.display = 'none';
+        } else {
+            cc2Fieldset.style.display = 'block';
+        }
+    })
+
     const searchParams = new URLSearchParams(document.location.search);
     pageConfig = Object.fromEntries(searchParams)
     
