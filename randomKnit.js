@@ -45,16 +45,12 @@ window.addEventListener('load', () => {
 
     typeEl.addEventListener('change', (event) => {
         const type = event.target.value;
-        const cc2Fieldset = document.getElementById('cc2-fieldset')
-        if(type === '2-color') {
-            cc2Fieldset.style.display = 'none';
-        } else {
-            cc2Fieldset.style.display = 'block';
-        }
+        displayCorrectColorFields(type);
     })
 
     const searchParams = new URLSearchParams(document.location.search);
-    pageConfig = Object.fromEntries(searchParams)
+    pageConfig = Object.fromEntries(searchParams);
+    displayCorrectColorFields(pageConfig.type);
     
     typeEl.value = pageConfig.type ? pageConfig.type : typeEl.value;
     titleEl.value = pageConfig.title ? pageConfig.title : titleEl.value;
@@ -326,6 +322,15 @@ const getCurrentTileData = () => {
         return Array.from(row.querySelectorAll('.stitch')).map(stitch => stitch.className.includes('mc') ? 0 : stitch.className.includes('2') ? 2 : 1).join('')
     }).join('-')
     return tileData;
+}
+
+const displayCorrectColorFields = (type) => {
+    const cc2Fieldset = document.getElementById('cc2-fieldset')
+        if(type === '2-color') {
+            cc2Fieldset.style.display = 'none';
+        } else {
+            cc2Fieldset.style.display = 'block';
+        }
 }
 
 function convertHTMLToPDF() {
