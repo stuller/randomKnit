@@ -3,7 +3,8 @@
     --cc: rgb(43, 42, 42);
     --error: rgb(128, 39, 39);
     --lightText: rgb(153, 153, 153);
-    --stitchBorders: rgba(0,0,0,.65)
+    --stitchBorders: #333;
+    --primary: #555;
 }
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -48,11 +49,34 @@ button {
     border: 1px solid transparent;
     text-align: center;
 }
+
+
+
 .stitch {
     height: 20px;
     width: 25px;
     border: 1px solid var(--stitchBorders);
 }
+#preview .stitch {
+    border: none;
+    height: 12px;
+    width: 15px;
+}
+#preview .stitch.darkFilter img {
+    filter: invert(0.5);
+    opacity: 1;
+}
+.stitch img {
+    display:none;
+}
+
+#preview .stitch img {
+    display:block;
+    height: 12px;
+    width: 15px;
+    opacity: 0.8;
+}
+
 
 .mc {
     background-color: var(--mc);
@@ -86,18 +110,7 @@ button {
     width: fit-content;
 }
 
-#preview .stitch {
-    height: 12px;
-    width: 15px;
-}
 
-#preview .stitch {
-    height: 21px;
-    width: 17px;
-    clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0); 
-    margin-top: -6px;
-    border: 1px solid var(--stitchBorders);
-}
 
 #preview .chartLabel, #preview #stitchLabels {
     display:none;
@@ -131,6 +144,40 @@ button {
 .chart .tile {
     display:flex;
 }
+.tooltip {
+    display:inline-block;
+}
+.tooltip span {
+    background-color: var(--primary);
+    color: white;
+    width: 1.35em;
+    display: inline-block;
+    text-align: center;
+    border-radius: 1em;
+    font-weight: bold;
+    font-size: .75em;
+    margin: 0 0.5em;
+    cursor: pointer;
+}
+
+.tooltip:active::after, .tooltip:hover::after {
+    content: attr(data-tooltip);
+    display: block;
+    max-width: 30em;
+    height: max-content;
+    position: absolute;
+    z-index: 10;
+    padding: 0.5em;
+    background-color: #fff;
+    border-radius: 0.5em;
+    margin: -2em 2.5em;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    font-size: .75em;
+    white-space: pre-wrap;
+
+}
+
 
 @media (max-width: 480px) {
     body {
@@ -152,29 +199,6 @@ button {
         grid-column-start: 1;
         grid-column-end: 1;
         margin: 0;
-    }
-    #preview .stitch {
-        border-style: solid;
-        border-width: 0.8em 0.8em 0 0;
-        content: '';
-        display: inline-block;
-        height: 0.75em;
-        position: relative;
-        transform: rotate(135deg);
-        width: 0.75em;
-    }
-    #preview .stitch {
-        height: 4px;
-        width: 5px;
-        border: 1px solid var(--stitchBorders);
-    }
-
-    #preview .stitch {
-        height: 8px;
-        width: 7px;
-        clip-path: polygon(100% 69%, 49% 100%, 0 69%, 0 0, 50% 35%, 100% 0);
-        margin-top: -2.5px;
-        border: none;
     }
 
     

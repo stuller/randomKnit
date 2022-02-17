@@ -7,13 +7,16 @@ import Select from './Select';
 
 export default function Setup(props) {
     const {title, setTitle, currentType, typeOptions, setType, rows, setRows, stitches, setStitches} = props;
+    const typeTooltip = `What's the difference between Three color stranded and Three color fair isle?
+    
+Three color stranded can have 3 colors in one row, while Three color fair isle will limit the row to 2 colors but will have 3 colors throughout the chart.`
 
     return (
         <React.Fragment>
             <Header text="Basic setup" element="h2"/>
 
             <TextInput label="Title:" id="title" value={title} onChange={setTitle}/>
-            <Select label="Type:" id="type" value={currentType} options={typeOptions} onChange={setType}/>
+            <Select label="Type:" id="type" value={currentType} options={typeOptions} onChange={setType} tooltip={typeTooltip}/>
             <NumberInput label="Rows:" id="rows" value={rows} onChange={setRows}/>
             <NumberInput label="Stitches:" id="stitches" value={stitches} onChange={setStitches}/>
             

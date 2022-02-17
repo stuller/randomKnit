@@ -40,7 +40,6 @@ export const handleDownloadChart = () => {
 }
 
 export const rotateTileData = (tileData) => {
-    console.log(tileData)
     const rows = tileData.length;
     const stitches = tileData[0].length;
     const newTile = [];

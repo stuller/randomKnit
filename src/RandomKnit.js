@@ -40,7 +40,6 @@ export default function RandomKnit() {
     const {type, title, rows, stitches, enableTile, mirrorH, mirrorV, mc, cc, cc2, tileData} = search;
 
     const handleCreateTile = () => {
-        console.log('handling create tile')
         setSearch({tileData: encodeTileData(createTileData(rows, stitches, type))})
     }
 

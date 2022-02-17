@@ -11,7 +11,8 @@ fieldset {
     --cc: rgb(43, 42, 42);
     --error: rgb(128, 39, 39);
     --lightText: rgb(153, 153, 153);
-    --stitchBorders: rgba(0,0,0,.65)
+    --stitchBorders: rgba(0,0,0,.65);
+    --primary: #555;
 }
 label {
     margin-left: 1em;
@@ -123,6 +124,18 @@ button {
 
 #chart .tile {
     display:flex;
+}
+
+.tooltip {
+    background-color: var(--primary);
+    color: white;
+    width: 1.35em;
+    display: inline-block;
+    text-align: center;
+    border-radius: 1em;
+    font-weight: bold;
+    font-size: .75em;
+    margin: 0 0.5em;
 }
 
 @media (max-width: 480px) {

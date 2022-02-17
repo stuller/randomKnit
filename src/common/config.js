@@ -8,7 +8,7 @@ export const CONFIG = {
         mirrorH: true,
         mirrorV: true,
         mc: '#ffffff',
-        cc: '#f5b2b2',
+        cc: '#f97697',
         cc2: '#333333',
         tileData: '111000-111000-111000-111000-111000-111000'
 }
