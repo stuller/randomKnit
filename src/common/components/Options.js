@@ -5,7 +5,7 @@ import Checkbox from './Checkbox';
 import ColorPicker from './ColorPicker';
 
 export default function Options(props) {
-    const {enableTile, setEnableTile, mirrorH, setMirrorH, mirrorV, setMirrorV, mc, setMc, cc, setCc, cc2, setCc2} = props;
+    const {enableTile, setEnableTile, mirrorH, setMirrorH, mirrorV, setMirrorV, mc, setMc, cc, setCc, cc2, setCc2, type} = props;
 
     return (
         <div id="options">
@@ -15,7 +15,10 @@ export default function Options(props) {
             <Checkbox label="Mirror Vertical:" id="mirrorV" checked={mirrorV} onChange={setMirrorV}/>
             <ColorPicker label="Main Color:" id="mc" value={mc} onChange={setMc}/>
             <ColorPicker label="Contrast Color:" id="cc" value={cc} onChange={setCc}/>
-            <ColorPicker label="Contrast Color 2:" id="cc2" value={cc2} onChange={setCc2}/>
+            { type !== '2-color' &&
+                <ColorPicker label="Contrast Color 2:" id="cc2" value={cc2} onChange={setCc2}/>
+            }
+            
             
         </div>
     )
@@ -33,6 +36,7 @@ Options.propTypes = {
     cc: PropTypes.string,
     setCc: PropTypes.func,
     cc2: PropTypes.string,
-    setCc2: PropTypes.func
+    setCc2: PropTypes.func,
+    type: PropTypes.string
 };
   

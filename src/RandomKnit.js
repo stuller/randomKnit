@@ -82,6 +82,7 @@ export default function RandomKnit() {
                     mc = {mc} setMc = {(e) => setSearch({mc: e.target.value})}
                     cc = {cc} setCc = {(e) => setSearch({cc: e.target.value})}
                     cc2 = {cc2} setCc2 = {(e) => setSearch({cc2: e.target.value})}
+                    type = {type}
                 />
                 
                 <Tile 
