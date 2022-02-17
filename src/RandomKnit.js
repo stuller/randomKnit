@@ -6,7 +6,7 @@ import {
     NumberParam,
     withDefault
   } from 'use-query-params';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {CONFIG} from './common/CONFIG';
 import Header from './common/components/Header';
 import Setup from './common/components/Setup';
@@ -19,7 +19,8 @@ import {createTileData,  decodeTileData, encodeTileData, handleDownloadChart, ro
 
 export default function RandomKnit() {
     const navigate = useNavigate();
-    const [chartIndex, setChartIndex] = React.useState(0)
+    const location = useLocation();
+    const [url, setUrl] = React.useState('/')
 
     const [search, setSearch] = useQueryParams({
         type: withDefault(StringParam, CONFIG.type),
@@ -55,11 +56,12 @@ export default function RandomKnit() {
 
     React.useEffect(() => {
         document.title = `JSKnit Chart: ${title}`;
+        setUrl(`${location.pathname}${location.search}`)
     }, [type, title, rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, cc2, tileData]);
 
     return (
         <React.Fragment>
-            <Header text="Random Knit" component="h1"/>
+            <Header text="Random Knit" element="h1"/>
 
             <Setup
                 title = {title} setTitle = {(e) => setSearch({title: e.target.value})}
@@ -95,10 +97,10 @@ export default function RandomKnit() {
 
             <hr/>
 
-            <Header text="Chart" component="h1"/>
+            <Header text="Chart" element="h1"/>
             <div id="container">
                 <div id="chartInfo">
-                    <Header text={title} component="h2"/>
+                    <Header text={title} element="h2" href={url}/>
                 </div>
                 <Chart 
                     tileData = {decodeTileData(tileData)} 

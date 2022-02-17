@@ -3,13 +3,21 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 export default function Header(props) {
-    const Component = props.component || "p";
+    const Element = props.element || "p";
+    const {href, text} = props;
 
-    return <Component>{props.text}</Component>;
+    const innerHTML = href ? <a href={href}>{text}</a> : text;
+
+    return (
+        
+        <Element>{innerHTML}</Element>
+        
+    );
 }
 
 Header.propTypes = {
-    component: PropTypes.elementType,
+    element: PropTypes.elementType,
     text: PropTypes.string,
+    href: PropTypes.string
   };
   

@@ -10,7 +10,7 @@ export default function Setup(props) {
 
     return (
         <React.Fragment>
-            <Header text="Basic setup" component="h2"/>
+            <Header text="Basic setup" element="h2"/>
 
             <TextInput label="Title:" id="title" value={title} onChange={setTitle}/>
             <Select label="Type:" id="type" value={currentType} options={typeOptions} onChange={setType}/>

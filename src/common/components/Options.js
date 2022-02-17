@@ -9,7 +9,7 @@ export default function Options(props) {
 
     return (
         <div id="options">
-            <Header text="Options" component="h2"/>
+            <Header text="Options" element="h2"/>
             <Checkbox label="Tile:" id="enableTile" checked={enableTile} onChange={setEnableTile}/>
             <Checkbox label="Mirror Horizontal:" id="mirrorH" checked={mirrorH} onChange={setMirrorH}/>
             <Checkbox label="Mirror Vertical:" id="mirrorV" checked={mirrorV} onChange={setMirrorV}/>
