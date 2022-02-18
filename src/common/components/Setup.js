@@ -15,10 +15,10 @@ Three color stranded can have 3 colors in one row, while Three color fair isle w
         <React.Fragment>
             <Header text="Basic setup" element="h2"/>
 
-            <TextInput label="Title:" id="title" value={title} onChange={setTitle}/>
+            <TextInput label="Title:" id="title" value={title} onBlur={setTitle}/>
             <Select label="Type:" id="type" value={currentType} options={typeOptions} onChange={setType} tooltip={typeTooltip}/>
-            <NumberInput label="Rows:" id="rows" value={rows} onChange={setRows}/>
-            <NumberInput label="Stitches:" id="stitches" value={stitches} onChange={setStitches}/>
+            <NumberInput label="Rows:" id="rows" value={rows} onBlur={setRows}/>
+            <NumberInput label="Stitches:" id="stitches" value={stitches} onBlur={setStitches}/>
             
         </React.Fragment>
     )
