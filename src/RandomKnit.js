@@ -14,6 +14,7 @@ import Options from './common/components/Options';
 import Tile from './common/components/Tile';
 import Chart from './common/components/Chart';
 import Preview from './common/components/Preview';
+import Tooltip from './common/components/Tooltip';
 import {createTileData,  decodeTileData, encodeTileData, handleDownloadChart, rotateTileData} from './common/utils';
 
 
@@ -27,7 +28,6 @@ export default function RandomKnit() {
         title: withDefault(StringParam, CONFIG.title),
         rows: withDefault(NumberParam, CONFIG.rows),
         stitches: withDefault(NumberParam, CONFIG.stitches),
-        enableTile: withDefault(BooleanParam, CONFIG.enableTile),
         mirrorH: withDefault(BooleanParam, CONFIG.mirrorH),
         mirrorV: withDefault(BooleanParam, CONFIG.mirrorV),
         mc: withDefault(StringParam, CONFIG.mc),
@@ -37,7 +37,7 @@ export default function RandomKnit() {
       });
 
     const typeOptions = CONFIG.typeOptions;
-    const {type, title, rows, stitches, enableTile, mirrorH, mirrorV, mc, cc, cc2, tileData} = search;
+    const {type, title, rows, stitches, mirrorH, mirrorV, mc, cc, cc2, tileData} = search;
 
     const handleCreateTile = () => {
         setSearch({tileData: encodeTileData(createTileData(rows, stitches, type))})
@@ -45,10 +45,16 @@ export default function RandomKnit() {
 
     const handleRotate = () => {
         const newTileData = rotateTileData(decodeTileData(tileData));
+        const has3ColorRows = newTileData.some(row => {
+            const rowSet = new Set(row);
+            return rowSet.size === 3;
+        })
+        const newType = has3ColorRows ? '3-color-stranded' : '3-color-fair-isle'
         setSearch({
             stitches: newTileData[0].length,
             rows: newTileData.length,
-            tileData: encodeTileData(newTileData)
+            tileData: encodeTileData(newTileData),
+            type: newType
         });
     } 
 
@@ -56,12 +62,11 @@ export default function RandomKnit() {
     React.useEffect(() => {
         document.title = `JSKnit Chart: ${title}`;
         setUrl(`${location.pathname}${location.search}`)
-    }, [type, title, rows, stitches, mirrorH, mirrorV, enableTile, mc, cc, cc2, tileData]);
+    }, [type, title, rows, stitches, mirrorH, mirrorV, mc, cc, cc2, tileData]);
 
     return (
         <React.Fragment>
             <Header text="Random Knit" element="h1"/>
-
             <Setup
                 title = {title} setTitle = {(e) => setSearch({title: e.target.value})}
                 currentType = {type} typeOptions = {typeOptions} setType = {(e) => setSearch({type: e.target.value})}
@@ -75,7 +80,6 @@ export default function RandomKnit() {
             <hr/>
             <div className="col-2">
                 <Options
-                    enableTile = {enableTile} setEnableTile = {(e) => setSearch({enableTile: e.target.checked})}
                     mirrorH = {mirrorH} setMirrorH = {(e) => setSearch({mirrorH: e.target.checked})}
                     mirrorV = {mirrorV} setMirrorV = {(e) => setSearch({mirrorV: e.target.checked})}
                     mc = {mc} setMc = {(e) => setSearch({mc: e.target.value})}
@@ -84,14 +88,20 @@ export default function RandomKnit() {
                     type = {type}
                 />
                 
-                <Tile 
-                    mc = {mc} 
-                    cc = {cc}
-                    cc2 = {cc2} 
-                    tileData = {decodeTileData(tileData)} 
-                />
+                <div data-testid="tile">
+                    <Tile 
+                        mc = {mc} 
+                        cc = {cc}
+                        cc2 = {cc2} 
+                        tileData = {decodeTileData(tileData)} 
+                        testId = 'tile'
+                    />
+                    <button onClick={handleRotate}>Rotate Tile</button>
+                    {type === '3-color-fair-isle' && 
+                        <Tooltip text="Rotating a fair isle tile may result in more than 2 colors per row." symbol="!" testId="rotateWarning"/>
+                    }
+                </div>
                 
-            <button onClick={handleRotate}>Rotate Tile</button>
             </div>
             
 
@@ -108,12 +118,14 @@ export default function RandomKnit() {
                     mirrorH = {mirrorH} 
                     mirrorV = {mirrorV}
                     displayLabels = {true}
+                    testId = 'chart'
                 />
                 <Preview 
                     tileData = {decodeTileData(tileData)} 
                     mc={mc} cc={cc} cc2={cc2}
                     mirrorH = {mirrorH} 
                     mirrorV = {mirrorV}
+                    testId = 'preview'
                 />
             </div>
             

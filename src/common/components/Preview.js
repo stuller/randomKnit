@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Chart from './Chart';
 
 export default function Preview(props) {
-    const {tileData, mirrorH, mirrorV, mc, cc, cc2} = props;
+    const {tileData, mirrorH, mirrorV, mc, cc, cc2, testId} = props;
     const rows = mirrorV ? tileData.length * 2 : tileData.length;
     const rowRepeats = Math.floor(50/rows) % 2 ? Math.floor(50/rows) + 1 : Math.floor(50/rows);
     const stitches = mirrorH ? tileData[0].length * 2 : tileData[0].length;
@@ -24,7 +24,7 @@ export default function Preview(props) {
         />)
     }
     return (
-        <div id="preview" style={style}>
+        <div id="preview" style={style} data-testid={testId}>
             {tiles}
         </div>
     );
@@ -36,6 +36,7 @@ Preview.propTypes = {
     mirrorV: PropTypes.bool,
     mc: PropTypes.string,
     cc: PropTypes.string,
-    cc2: PropTypes.string
+    cc2: PropTypes.string,
+    testId: PropTypes.string
 };
   

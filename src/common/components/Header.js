@@ -2,7 +2,7 @@ import * as React from 'react'
 import PropTypes from 'prop-types';
 
 export default function Header(props) {
-    const Element = props.element || "p";
+    const Element = props.element;
     const {href, text} = props;
 
     const innerHTML = href ? <a href={href}>{text}</a> : text;

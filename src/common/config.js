@@ -4,7 +4,6 @@ export const CONFIG = {
         typeOptions: [{value: '2-color', text: 'Two color'}, {value: '3-color-stranded', text: 'Three color stranded'}, {value: '3-color-fair-isle', text: 'Three color fair isle'}],
         rows: 6,
         stitches: 6,
-        enableTile: true,
         mirrorH: true,
         mirrorV: true,
         mc: '#ffffff',

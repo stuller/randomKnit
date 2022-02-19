@@ -1,7 +1,6 @@
 import * as React from 'react'
 import PropTypes from 'prop-types';
 import Stitch from './Stitch';
-import { filter } from 'lodash';
 
 export default function TileRow(props) {
     const {rowData, mc, cc, cc2} = props;
@@ -21,7 +20,7 @@ export default function TileRow(props) {
         <div className="row">
             {rowData.map((stitch, index) => {
                 const filter = isLight(colors[stitch]) ? '' : 'darkFilter'
-                return <Stitch key={`stitch-${index}`} style={{backgroundColor: colors[stitch], filter: filter}} className={`stitch ${filter}`}/>
+                return <Stitch key={`stitch-${index}`} style={{backgroundColor: colors[stitch], filter: filter}} className={`stitch stitch-${stitch} ${filter}`}/>
             })}
         </div>
     );

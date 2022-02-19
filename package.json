@@ -4,7 +4,8 @@
   "description": "A knitting chart generator application",
   "main": "randomKnit.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --collect-coverage-from",
+    "test:coverage": "npm test -- --coverage",
     "dev": "webpack serve",
     "build": "webpack"
   },
@@ -18,6 +19,22 @@
     "url": "https://github.com/stuller/randomKnit/issues"
   },
   "homepage": "https://github.com/stuller/randomKnit#readme",
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ],
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
+  },
   "dependencies": {
     "css-loader": "^6.6.0",
     "prop-types": "^15.8.1",
@@ -29,11 +46,19 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.2",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@babel/runtime": "^7.17.2",
+    "@testing-library/react": "^12.1.3",
+    "@types/jest": "^27.4.0",
+    "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.3",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "prettier": "^2.5.1",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4"

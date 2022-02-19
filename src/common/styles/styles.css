@@ -1,4 +1,7 @@
-:root {
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size:16px;
     --mc: rgb(236, 206, 206);
     --cc: rgb(43, 42, 42);
     --error: rgb(128, 39, 39);
@@ -6,9 +9,9 @@
     --stitchBorders: #333;
     --primary: #555;
 }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size:16px;
+#root {
+    max-width: 1200px;
+    margin: auto;
 }
 .col-2 {
     display:grid;
