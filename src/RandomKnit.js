@@ -49,7 +49,7 @@ export default function RandomKnit() {
             const rowSet = new Set(row);
             return rowSet.size === 3;
         })
-        const newType = has3ColorRows ? '3-color-stranded' : '3-color-fair-isle'
+        const newType = has3ColorRows && type === '3-color-fair-isle' ? '3-color-stranded' : type
         setSearch({
             stitches: newTileData[0].length,
             rows: newTileData.length,
