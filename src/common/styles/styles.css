@@ -193,16 +193,23 @@ button {
         padding-block-start: 0;
     }
     #container {
-        display: grid;
-        grid-template-columns: fit-content(300px);
-        grid-row-gap: 1.5em;
-        justify-content: center;
+        display: flex;
+        flex-direction: column;
     }
     #headerTitle {
-        grid-column-start: 1;
-        grid-column-end: 1;
         margin: 0;
     }
-
+    #preview .stitch {
+        border: none;
+        height: 5px;
+        width: 6px;
+    }
+    
+    #preview .stitch img {
+        display:block;
+        height: 5px;
+        width: 6px;
+        opacity: 0.8;
+    }
     
 }
