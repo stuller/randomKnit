@@ -351,8 +351,59 @@ describe("Update options", function () {
     expect(document.querySelectorAll('.stitch-2')[0].style.backgroundColor).toBe('rgb(51, 51, 51)');
   });
 
+  it("Rotate colors updates preview, chart, and url for 3 color types", async function () {
+    let { getByText, getByLabelText } = render(
+      <>
+      <BrowserRouter>
+        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+            <RandomKnit/>
+        </QueryParamProvider>
+      </BrowserRouter>
+      </>
+    );
+
+    fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-stranded'}});
+    fireEvent.blur(getByLabelText('Main Color:'), {target: {value: '#ffffff'}});
+    fireEvent.blur(getByLabelText('Contrast Color:'), {target: {value: '#000000'}});
+    fireEvent.blur(getByLabelText('Contrast Color 2:'), {target: {value: '#333333'}});
+    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Rotate Colors'), {});
+
+    expect(document.location.search).toContain('cc2=%23ffffff');
+    expect(document.location.search).toContain('mc=%23000000');
+    expect(document.location.search).toContain('cc=%23333333');
+
+    expect(document.querySelectorAll('.stitch-2')[0].style.backgroundColor).toBe('rgb(255, 255, 255)');
+    expect(document.querySelectorAll('.stitch-0')[0].style.backgroundColor).toBe('rgb(0, 0, 0)');
+    expect(document.querySelectorAll('.stitch-1')[0].style.backgroundColor).toBe('rgb(51, 51, 51)');
+  });
+
+  it("Rotate colors updates preview, chart, and url for 2 color types", async function () {
+    let { getByText, getByLabelText } = render(
+      <>
+      <BrowserRouter>
+        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+            <RandomKnit/>
+        </QueryParamProvider>
+      </BrowserRouter>
+      </>
+    );
+
+    fireEvent.change(getByLabelText('Type:'), {target: {value: '2-color'}});
+    fireEvent.blur(getByLabelText('Main Color:'), {target: {value: '#ffffff'}});
+    fireEvent.blur(getByLabelText('Contrast Color:'), {target: {value: '#000000'}});
+    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Rotate Colors'), {});
+
+    expect(document.location.search).toContain('cc=%23ffffff');
+    expect(document.location.search).toContain('mc=%23000000');
+
+    expect(document.querySelectorAll('.stitch-0')[0].style.backgroundColor).toBe('rgb(0, 0, 0)');
+    expect(document.querySelectorAll('.stitch-1')[0].style.backgroundColor).toBe('rgb(255, 255, 255)');
+  });
+
   it("Rotate tile changes fair isle to stranded when 3 colors are in row", async function () {
-    let { getByText, getByTestId, getByLabelText } = render(
+    let { getByText, getByLabelText } = render(
       <>
       <BrowserRouter>
         <QueryParamProvider ReactRouterRoute={RouteAdapter}>

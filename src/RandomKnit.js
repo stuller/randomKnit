@@ -65,6 +65,19 @@ export default function RandomKnit() {
         setSearch({tileData: flipTileDataV(tileData)});
     }
     
+    const handleRotateColors = () => {
+        if(type === '2-color') {
+            const colors = [mc, cc];
+            setSearch({mc: colors[1], cc: colors[0]});
+        } else {
+            const colors = [mc, cc, cc2];
+            setSearch({mc: colors[1], cc: colors[2], cc2: colors[0]});
+            document.getElementById('cc2').value = cc2;
+        }
+        //should not have to do this but color picker preview does not update if we don't
+        document.getElementById('mc').value = mc;
+        document.getElementById('cc').value = cc;
+    }
     
     
     React.useEffect(() => {
@@ -87,14 +100,17 @@ export default function RandomKnit() {
 
             <hr/>
             <div className="col-2">
-                <Options
-                    mirrorH = {mirrorH} setMirrorH = {(e) => setSearch({mirrorH: e.target.checked})}
-                    mirrorV = {mirrorV} setMirrorV = {(e) => setSearch({mirrorV: e.target.checked})}
-                    mc = {mc} setMc = {(e) => setSearch({mc: e.target.value})}
-                    cc = {cc} setCc = {(e) => setSearch({cc: e.target.value})}
-                    cc2 = {cc2} setCc2 = {(e) => setSearch({cc2: e.target.value})}
-                    type = {type}
-                />
+                <div id="options">
+                    <Options
+                        mirrorH = {mirrorH} setMirrorH = {(e) => setSearch({mirrorH: e.target.checked})}
+                        mirrorV = {mirrorV} setMirrorV = {(e) => setSearch({mirrorV: e.target.checked})}
+                        mc = {mc} setMc = {(e) => setSearch({mc: e.target.value})}
+                        cc = {cc} setCc = {(e) => setSearch({cc: e.target.value})}
+                        cc2 = {cc2} setCc2 = {(e) => setSearch({cc2: e.target.value})}
+                        type = {type}
+                    />
+                    <button onClick={handleRotateColors}>Rotate Colors</button>
+                </div>
                 
                 <div data-testid="tile">
                     <Tile 

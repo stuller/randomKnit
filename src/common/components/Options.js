@@ -8,7 +8,7 @@ export default function Options(props) {
     const {mirrorH, setMirrorH, mirrorV, setMirrorV, mc, setMc, cc, setCc, cc2, setCc2, type} = props;
 
     return (
-        <div id="options">
+        <>
             <Header text="Options" element="h2"/>
             <Checkbox label="Mirror Horizontal:" id="mirrorH" checked={mirrorH} onChange={setMirrorH}/>
             <Checkbox label="Mirror Vertical:" id="mirrorV" checked={mirrorV} onChange={setMirrorV}/>
@@ -17,7 +17,7 @@ export default function Options(props) {
             { type !== '2-color' &&
                 <ColorPicker label="Contrast Color 2:" id="cc2" value={cc2} onBlur={setCc2}/>
             }
-        </div>
+        </>
     )
 }
 
