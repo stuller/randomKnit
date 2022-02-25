@@ -8,6 +8,7 @@ body {
     --lightText: rgb(153, 153, 153);
     --stitchBorders: #333;
     --primary: #555;
+    --tileDelimeter: #ff0000;
 }
 #root {
     max-width: 1200px;
@@ -129,6 +130,11 @@ button {
 #chartInfo {
     grid-column-start: 1;
     grid-column-end: 3;
+}
+
+
+.chart .tile.mirrorH .row .stitch:last-child{
+    border-left: 2px solid var(--tileDelimeter)
 }
 
 .tile.mirrorH .row {
