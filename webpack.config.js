@@ -25,7 +25,7 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(png|jp(e*)g|svg|gif)$/,
+        test: /\.(png|jp(e*)g|svg|gif|txt)$/,
         use: ['file-loader'],
       },
       {
@@ -37,6 +37,13 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "index.html"),
+      options: {
+        presets: ['@babel/preset-env', '@babel/preset-react']
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, "src", "license.html"),
+      filename: 'license.html',
       options: {
         presets: ['@babel/preset-env', '@babel/preset-react']
       }
