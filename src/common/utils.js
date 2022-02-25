@@ -1,4 +1,4 @@
-
+// Tile utils
 export const createTileData = (rows, stitches, type) => {
     const tileData = [];
     for(let i = rows; i > 0; i--) {
@@ -28,17 +28,6 @@ export const createTileData = (rows, stitches, type) => {
     return tileData;
 }
 
-export const handleDownloadChart = () => {
-    const options = {
-        enableLinks:true,
-        jsPDF: { orientation: 'p'},
-        html2canvas:  { width: 1400},
-    }
-    var element = document.getElementById('container');
-    var worker = html2pdf().set(options).from(element).save(`${document.querySelector('#chartInfo h2').innerText.replaceAll(/\s/gi, '-')}.pdf`);
-
-}
-
 export const rotateTileData = (tileData) => {
     const rows = tileData.length;
     const stitches = tileData[0].length;
@@ -53,10 +42,35 @@ export const rotateTileData = (tileData) => {
     return newTile;
 }
 
+export const flipTileDataH = (tileData) => {
+    const flippedTileData = decodeTileData(tileData).map(row => row.reverse());
+    return (encodeTileData(flippedTileData));
+}
+
+export const flipTileDataV = (tileData) => {
+    const flippedTileData = decodeTileData(tileData).reverse();
+    return (encodeTileData(flippedTileData));
+}
+
 export const decodeTileData = (tileData) => {
     return tileData.split('-').map(row => row.split(''));
 };
 
 export const encodeTileData = (tileData) => {
     return tileData.map(row => row.join('')).join('-')
+}
+
+
+
+
+// pdf utils
+export const handleDownloadChart = () => {
+    const options = {
+        enableLinks:true,
+        jsPDF: { orientation: 'p'},
+        html2canvas:  { width: 1400},
+    }
+    var element = document.getElementById('container');
+    var worker = html2pdf().set(options).from(element).save(`${document.querySelector('#chartInfo h2').innerText.replaceAll(/\s/gi, '-')}.pdf`);
+
 }

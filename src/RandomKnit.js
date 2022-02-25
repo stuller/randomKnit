@@ -6,7 +6,7 @@ import {
     NumberParam,
     withDefault
   } from 'use-query-params';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import {CONFIG} from './common/CONFIG';
 import Header from './common/components/Header';
 import Setup from './common/components/Setup';
@@ -15,11 +15,10 @@ import Tile from './common/components/Tile';
 import Chart from './common/components/Chart';
 import Preview from './common/components/Preview';
 import Tooltip from './common/components/Tooltip';
-import {createTileData,  decodeTileData, encodeTileData, handleDownloadChart, rotateTileData} from './common/utils';
+import {createTileData,  decodeTileData, encodeTileData, flipTileDataH, flipTileDataV, handleDownloadChart, rotateTileData} from './common/utils';
 
 
 export default function RandomKnit() {
-    const navigate = useNavigate();
     const location = useLocation();
     const [url, setUrl] = React.useState('/')
 
@@ -58,7 +57,16 @@ export default function RandomKnit() {
         });
     } 
 
+    const handleFlipTileH = () => {
+        setSearch({tileData: flipTileDataH(tileData)});
+    }
 
+    const handleFlipTileV = () => {
+        setSearch({tileData: flipTileDataV(tileData)});
+    }
+    
+    
+    
     React.useEffect(() => {
         document.title = `JSKnit Chart: ${title}`;
         setUrl(`${location.pathname}${location.search}`)
@@ -100,6 +108,8 @@ export default function RandomKnit() {
                     {type === '3-color-fair-isle' && 
                         <Tooltip text="Rotating a fair isle tile may result in more than 2 colors per row." symbol="!" testId="rotateWarning"/>
                     }
+                    <button onClick={handleFlipTileH}>Flip Tile Horizontally</button>
+                    <button onClick={handleFlipTileV}>Flip Tile Vertically</button>
                 </div>
                 
             </div>

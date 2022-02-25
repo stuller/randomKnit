@@ -351,7 +351,7 @@ describe("Update options", function () {
     expect(document.querySelectorAll('.stitch-2')[0].style.backgroundColor).toBe('rgb(51, 51, 51)');
   });
 
-  it("Rotate tile changes fair isle to stranded", async function () {
+  it("Rotate tile changes fair isle to stranded when 3 colors are in row", async function () {
     let { getByText, getByTestId, getByLabelText } = render(
       <>
       <BrowserRouter>
@@ -362,13 +362,20 @@ describe("Update options", function () {
       </>
     );
     fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-fair-isle'}});
-    fireEvent.blur(getByLabelText('Rows:'), {target: {value: '6'}});
-    fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '6'}});
+    fireEvent.blur(getByLabelText('Rows:'), {target: {value: '10'}});
+    fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '10'}});
     fireEvent.click(getByText('Create Chart'), {});
 
     fireEvent.click(getByText('Rotate Tile'), {});
+    const newParams = new URLSearchParams(document.location.search);
+    const newTileData = newParams.get('tileData');
+    const rows = newTileData.split('-');
+    if(rows.some(row => row.includes('0') && row.includes('1') && row.includes('2'))) {
+      expect(document.location.search).toContain('type=3-color-stranded')
+    } else {
+      expect(document.location.search).toContain('type=3-color-fair-isle')
+    }
     
-    expect(document.location.search).toContain('type=3-color-stranded')
   });
 
   it("Rotate tile rotates the tile and updates the url", async function () {
@@ -394,6 +401,60 @@ describe("Update options", function () {
     const newTileData = newParams.get('tileData');
 
     const expectedNewTileData = `${tileData[3]}${tileData[0]}-${tileData[4]}${tileData[1]}`;
+
+    expect(newTileData).toEqual(expectedNewTileData);
+  });
+
+  it("flip tile horizontally flips the tile and updates the url", async function () {
+    let { getByText, getByLabelText } = render(
+      <>
+      <BrowserRouter>
+        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+            <RandomKnit/>
+        </QueryParamProvider>
+      </BrowserRouter>
+      </>
+    );
+
+    fireEvent.blur(getByLabelText('Rows:'), {target: {value: '2'}});
+    fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '2'}});
+    fireEvent.click(getByText('Create Chart'), {});
+
+    const params = new URLSearchParams(document.location.search);
+    const tileData = params.get('tileData');
+
+    fireEvent.click(getByText('Flip Tile Horizontally'), {});
+    const newParams = new URLSearchParams(document.location.search);
+    const newTileData = newParams.get('tileData');
+
+    const expectedNewTileData = `${tileData[1]}${tileData[0]}-${tileData[4]}${tileData[3]}`;
+
+    expect(newTileData).toEqual(expectedNewTileData);
+  });
+
+  it("flip tile vertically flips the tile and updates the url", async function () {
+    let { getByText, getByLabelText } = render(
+      <>
+      <BrowserRouter>
+        <QueryParamProvider ReactRouterRoute={RouteAdapter}>
+            <RandomKnit/>
+        </QueryParamProvider>
+      </BrowserRouter>
+      </>
+    );
+
+    fireEvent.blur(getByLabelText('Rows:'), {target: {value: '2'}});
+    fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '2'}});
+    fireEvent.click(getByText('Create Chart'), {});
+
+    const params = new URLSearchParams(document.location.search);
+    const tileData = params.get('tileData');
+
+    fireEvent.click(getByText('Flip Tile Vertically'), {});
+    const newParams = new URLSearchParams(document.location.search);
+    const newTileData = newParams.get('tileData');
+
+    const expectedNewTileData = `${tileData[3]}${tileData[4]}-${tileData[0]}${tileData[1]}`;
 
     expect(newTileData).toEqual(expectedNewTileData);
   });
