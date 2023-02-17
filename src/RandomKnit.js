@@ -92,7 +92,10 @@ export default function RandomKnit() {
     
     React.useEffect(() => {
         document.title = `JSKnit Chart: ${title}`;
-        setUrl(`${location.pathname}${location.search}`)
+        setUrl(`${location.pathname}${location.search}`);
+        
+        document.getElementById('rows').value = search.rows;
+        document.getElementById('stitches').value = search.stitches;
     }, [search]);
 
     return (

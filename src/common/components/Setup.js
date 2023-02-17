@@ -14,7 +14,6 @@ Three color stranded can have 3 colors in one row, while Three color fair isle w
     return (
         <React.Fragment>
             <Header text="Basic setup" element="h2"/>
-
             <TextInput label="Title:" id="title" value={title} onBlur={setTitle}/>
             <Select label="Type:" id="type" value={currentType} options={typeOptions} onChange={setType} tooltip={typeTooltip}/>
             <NumberInput label="Rows:" id="rows" value={rows} onBlur={setRows}/>
