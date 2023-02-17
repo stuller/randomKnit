@@ -276,7 +276,7 @@ input, select {
         display:block;
         height: 5px;
         width: 6px;
-        opacity: 0.8;
+        mix-blend-mode: luminosity;
     }
     
 }

@@ -174,7 +174,7 @@ export default function RandomKnit() {
             <footer>
                 Copyright (c) 2023, Summer Tuller
                 <br/>
-                <a href="/license.html">License</a>
+                <a href="license.html">License</a>
             </footer>
         </>
     )
