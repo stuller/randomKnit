@@ -75,15 +75,15 @@ describe("RandomKnit first load tests", function () {
       </>
     );
 
-    expect(getByLabelText("Mirror Horizontal:")).toBeInTheDocument;
-    expect(getByLabelText("Mirror Horizontal:").checked).toBe(true);
-    expect(getByLabelText("Mirror Vertical:")).toBeInTheDocument;
-    expect(getByLabelText("Mirror Vertical:").checked).toBe(true);
-    expect(getByLabelText("Main Color:")).toBeInTheDocument;
-    expect(getByLabelText("Main Color:").value).toBe('#ffffff');
-    expect(getByLabelText("Contrast Color:")).toBeInTheDocument;
-    expect(getByLabelText("Contrast Color:").value).toBe('#f97697');
-    expect(queryByLabelText("Contrast Color 2:")).toBe(null)
+    expect(getByLabelText("Mirror H:")).toBeInTheDocument;
+    expect(getByLabelText("Mirror H:").checked).toBe(true);
+    expect(getByLabelText("Mirror V:")).toBeInTheDocument;
+    expect(getByLabelText("Mirror V:").checked).toBe(true);
+    expect(getByLabelText("MC:")).toBeInTheDocument;
+    expect(getByLabelText("MC:").value).toBe('#264653');
+    expect(getByLabelText("CC:")).toBeInTheDocument;
+    expect(getByLabelText("CC:").value).toBe('#e9c46a');
+    expect(queryByLabelText("CC 2:")).toBe(null)
   });
 
   it("Buttons appear as they should", function () {
@@ -97,8 +97,8 @@ describe("RandomKnit first load tests", function () {
       </>
     );
 
-    expect(getByText("Create Chart")).toBeInTheDocument;
-    expect(getByText("Download Chart")).toBeInTheDocument;
+    expect(getByText("Create")).toBeInTheDocument;
+    expect(getByText("Download")).toBeInTheDocument;
     expect(getByText("Rotate Tile")).toBeInTheDocument;
   });
 
@@ -160,7 +160,7 @@ describe("Update setup", function () {
     );
     
     fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-stranded'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     const tile = await waitFor(() => getByTestId('tile'));
     expect(tile.querySelectorAll('.stitch-0').length).not.toBe(0);
@@ -179,7 +179,7 @@ describe("Update setup", function () {
     expect(document.location.search).toContain('tileData=')
 
     fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-fair-isle'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     expect(tile.querySelectorAll('.stitch-0').length).not.toBe(0);
     expect(tile.querySelectorAll('.stitch-1').length).not.toBe(0);
@@ -197,7 +197,7 @@ describe("Update setup", function () {
     expect(getByTestId('rotateWarning')).toBeInTheDocument;
 
     fireEvent.change(getByLabelText('Type:'), {target: {value: '2-color'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     expect(tile.querySelectorAll('.stitch-0').length).not.toBe(0);
     expect(tile.querySelectorAll('.stitch-1').length).not.toBe(0);
@@ -246,7 +246,7 @@ describe("Update setup", function () {
     fireEvent.blur(getByLabelText('Rows:'), {target: {value: '3'}});
     fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '3'}});
 
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     expect(document.location.search).toContain('rows=3');
     expect(document.location.search).toContain('stitches=3');
@@ -283,7 +283,7 @@ describe("Update setup", function () {
       </>
     );
 
-    fireEvent.click(getByText('Download Chart'), {});
+    fireEvent.click(getByText('Download'), {});
 
     expect(utils.handleDownloadChart).toHaveBeenCalledTimes(1);
   });
@@ -306,8 +306,8 @@ describe("Update options", function () {
     );
     fireEvent.blur(getByLabelText('Rows:'), {target: {value: '6'}});
     fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '6'}});
-    fireEvent.click(getByLabelText('Mirror Horizontal:'), {});
-    fireEvent.click(getByLabelText('Mirror Vertical:'), {});
+    fireEvent.click(getByLabelText('Mirror H:'), {});
+    fireEvent.click(getByLabelText('Mirror V:'), {});
 
     expect(document.location.search).toContain('mirrorH=0');
     expect(document.location.search).toContain('mirrorV=0');
@@ -337,10 +337,10 @@ describe("Update options", function () {
     );
 
     fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-stranded'}});
-    fireEvent.blur(getByLabelText('Main Color:'), {target: {value: '#ffffff'}});
-    fireEvent.blur(getByLabelText('Contrast Color:'), {target: {value: '#000000'}});
-    fireEvent.blur(getByLabelText('Contrast Color 2:'), {target: {value: '#333333'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.blur(getByLabelText('MC:'), {target: {value: '#ffffff'}});
+    fireEvent.blur(getByLabelText('CC:'), {target: {value: '#000000'}});
+    fireEvent.blur(getByLabelText('CC 2:'), {target: {value: '#333333'}});
+    fireEvent.click(getByText('Create'), {});
 
     expect(document.location.search).toContain('mc=%23ffffff');
     expect(document.location.search).toContain('cc=%23000000');
@@ -363,10 +363,10 @@ describe("Update options", function () {
     );
 
     fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-stranded'}});
-    fireEvent.blur(getByLabelText('Main Color:'), {target: {value: '#ffffff'}});
-    fireEvent.blur(getByLabelText('Contrast Color:'), {target: {value: '#000000'}});
-    fireEvent.blur(getByLabelText('Contrast Color 2:'), {target: {value: '#333333'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.blur(getByLabelText('MC:'), {target: {value: '#ffffff'}});
+    fireEvent.blur(getByLabelText('CC:'), {target: {value: '#000000'}});
+    fireEvent.blur(getByLabelText('CC 2:'), {target: {value: '#333333'}});
+    fireEvent.click(getByText('Create'), {});
     fireEvent.click(getByText('Rotate Colors'), {});
 
     expect(document.location.search).toContain('cc2=%23ffffff');
@@ -390,9 +390,9 @@ describe("Update options", function () {
     );
 
     fireEvent.change(getByLabelText('Type:'), {target: {value: '2-color'}});
-    fireEvent.blur(getByLabelText('Main Color:'), {target: {value: '#ffffff'}});
-    fireEvent.blur(getByLabelText('Contrast Color:'), {target: {value: '#000000'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.blur(getByLabelText('MC:'), {target: {value: '#ffffff'}});
+    fireEvent.blur(getByLabelText('CC:'), {target: {value: '#000000'}});
+    fireEvent.click(getByText('Create'), {});
     fireEvent.click(getByText('Rotate Colors'), {});
 
     expect(document.location.search).toContain('cc=%23ffffff');
@@ -415,7 +415,7 @@ describe("Update options", function () {
     fireEvent.change(getByLabelText('Type:'), {target: {value: '3-color-fair-isle'}});
     fireEvent.blur(getByLabelText('Rows:'), {target: {value: '10'}});
     fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '10'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     fireEvent.click(getByText('Rotate Tile'), {});
     const newParams = new URLSearchParams(document.location.search);
@@ -442,7 +442,7 @@ describe("Update options", function () {
 
     fireEvent.blur(getByLabelText('Rows:'), {target: {value: '2'}});
     fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '2'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     const params = new URLSearchParams(document.location.search);
     const tileData = params.get('tileData');
@@ -469,7 +469,7 @@ describe("Update options", function () {
 
     fireEvent.blur(getByLabelText('Rows:'), {target: {value: '2'}});
     fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '2'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     const params = new URLSearchParams(document.location.search);
     const tileData = params.get('tileData');
@@ -496,7 +496,7 @@ describe("Update options", function () {
 
     fireEvent.blur(getByLabelText('Rows:'), {target: {value: '2'}});
     fireEvent.blur(getByLabelText('Stitches:'), {target: {value: '2'}});
-    fireEvent.click(getByText('Create Chart'), {});
+    fireEvent.click(getByText('Create'), {});
 
     const params = new URLSearchParams(document.location.search);
     const tileData = params.get('tileData');

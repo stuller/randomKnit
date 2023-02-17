@@ -10,12 +10,12 @@ export default function Options(props) {
     return (
         <>
             <Header text="Options" element="h2"/>
-            <Checkbox label="Mirror Horizontal:" id="mirrorH" checked={mirrorH} onChange={setMirrorH}/>
-            <Checkbox label="Mirror Vertical:" id="mirrorV" checked={mirrorV} onChange={setMirrorV}/>
-            <ColorPicker label="Main Color:" id="mc" value={mc} onBlur={setMc}/>
-            <ColorPicker label="Contrast Color:" id="cc" value={cc} onBlur={setCc}/>
+            <Checkbox label="Mirror H:" id="mirrorH" checked={mirrorH} onChange={setMirrorH}/>
+            <Checkbox label="Mirror V:" id="mirrorV" checked={mirrorV} onChange={setMirrorV}/>
+            <ColorPicker label="MC:" id="mc" value={mc} onBlur={setMc}/>
+            <ColorPicker label="CC:" id="cc" value={cc} onBlur={setCc}/>
             { type !== '2-color' &&
-                <ColorPicker label="Contrast Color 2:" id="cc2" value={cc2} onBlur={setCc2}/>
+                <ColorPicker label="CC 2:" id="cc2" value={cc2} onBlur={setCc2}/>
             }
         </>
     )
